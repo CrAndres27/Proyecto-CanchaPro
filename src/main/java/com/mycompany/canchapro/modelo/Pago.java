@@ -17,6 +17,47 @@ public class Pago {
         this.metodo = metodo;
         this.observacion = observacion;
     }
+
+    public int getNum_pago() {
+        return num_pago;
+    }
+
+    public void setNum_pago(int num_pago) {
+        this.num_pago = num_pago;
+    }
+
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
+        this.fechaHora = fechaHora;
+    }
+
+    public double getMonto() {
+        return monto;
+    }
+
+    public void setMonto(double monto) {
+        this.monto = monto;
+    }
+
+    public MetodoPago getMetodo() {
+        return metodo;
+    }
+
+    public void setMetodo(MetodoPago metodo) {
+        this.metodo = metodo;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+    
     
     
 }

@@ -18,5 +18,55 @@ public class Venta {
         this.metodo = metodo;
         this.cont_detalle = cont_detalle;
     }
+
+    public int getCod_venta() {
+        return cod_venta;
+    }
+
+    public void setCod_venta(int cod_venta) {
+        this.cod_venta = cod_venta;
+    }
+
+    public LocalDateTime getFecha_hora() {
+        return fecha_hora;
+    }
+
+    public void setFecha_hora(LocalDateTime fecha_hora) {
+        this.fecha_hora = fecha_hora;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public MetodoPago getMetodo() {
+        return metodo;
+    }
+
+    public void setMetodo(MetodoPago metodo) {
+        this.metodo = metodo;
+    }
+
+    public DetalleVenta[] getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(DetalleVenta[] detalle) {
+        this.detalle = detalle;
+    }
+
+    public int getCont_detalle() {
+        return cont_detalle;
+    }
+
+    public void setCont_detalle(int cont_detalle) {
+        this.cont_detalle = cont_detalle;
+    }
+    
+    
     
 }

@@ -4,6 +4,12 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Cristian
@@ -15,6 +21,8 @@ public class Canchas extends javax.swing.JPanel {
      */
     public Canchas() {
         initComponents();
+        
+        CargarCanchas();
     }
 
     /**
@@ -26,19 +34,92 @@ public class Canchas extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TablaCanchas = new javax.swing.JTable();
+
+        TablaCanchas.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TablaCanchas.setForeground(new java.awt.Color(0, 0, 0));
+        TablaCanchas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Codigo", "Nombre", "Tipo", "Capacidad", "Precio/Hr", "Estado", "Apertura", "Cierre"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(TablaCanchas);
+        if (TablaCanchas.getColumnModel().getColumnCount() > 0) {
+            TablaCanchas.getColumnModel().getColumn(0).setResizable(false);
+            TablaCanchas.getColumnModel().getColumn(1).setResizable(false);
+            TablaCanchas.getColumnModel().getColumn(2).setResizable(false);
+            TablaCanchas.getColumnModel().getColumn(3).setResizable(false);
+            TablaCanchas.getColumnModel().getColumn(4).setResizable(false);
+            TablaCanchas.getColumnModel().getColumn(5).setResizable(false);
+            TablaCanchas.getColumnModel().getColumn(6).setResizable(false);
+            TablaCanchas.getColumnModel().getColumn(7).setResizable(false);
+        }
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 779, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 848, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(76, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 509, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(247, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(167, 167, 167))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    public void CargarCanchas(){
+    DefaultTableModel cancha = new DefaultTableModel();
+    
+    cancha.addColumn("Código");
+    cancha.addColumn("Nombre");
+    cancha.addColumn("Tipo");
+    cancha.addColumn("Capacidad");
+    cancha.addColumn("Precio/Hr");
+    cancha.addColumn("Estado");
+    cancha.addColumn("Apertura");
+    cancha.addColumn("Cierre");
+    
+    try{
+        FileReader fr = new FileReader("datos/canchas.txt");
+        BufferedReader br = new BufferedReader(fr);
+    
+        String linea;
+        
+        linea = br.readLine();
+        while(linea != null){
+            String [] datos = linea.split(",");
+            if(datos.length>=8){
+                cancha.addRow(datos);
+                linea = br.readLine();
+            }
+        }
+        br.close();
+    }catch (IOException e){
+    JOptionPane.showMessageDialog(this, "Error ala cargar el archivo canchas");
+    }
+        TablaCanchas.setModel(cancha);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaCanchas;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
