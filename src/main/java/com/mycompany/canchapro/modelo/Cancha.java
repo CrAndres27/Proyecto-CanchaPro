@@ -23,6 +23,10 @@ public class Cancha {
         this.hora_apertura = hora_apertura;
         this.hora_cierre = hora_cierre;
     }
+    
+    public Cancha(String nombre){
+        this.nombre = nombre;
+    }
 
     public String getCod_cancha() {
         return cod_cancha;

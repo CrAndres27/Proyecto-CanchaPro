@@ -8,6 +8,11 @@ public class Cliente extends Persona {
         super(id, nombre, telefono, correo);
         this.fecha_registro = fecha_registro;
     }
+    
+    public Cliente(String nombre) {
+        super(0, nombre,"","");
+        this.nombre = nombre;
+    }
 
     public LocalDate getFecha_registro() {
         return fecha_registro;

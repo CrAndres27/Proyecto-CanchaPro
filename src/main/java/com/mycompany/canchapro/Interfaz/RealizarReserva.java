@@ -4,9 +4,17 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.Cancha;
+import com.mycompany.canchapro.modelo.Cliente;
+import com.mycompany.canchapro.modelo.Reserva;
+import static com.mycompany.canchapro.modelo.Reserva.HorarioOcupado;
 import com.mycompany.canchapro.modelo.ServicioAdicional;
+import com.mycompany.canchapro.modelo.misenums.EstadoReserva;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,6 +26,7 @@ public class RealizarReserva extends javax.swing.JDialog {
 
     private String precio;
     private String cancha;
+    private int codReserva = 0;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RealizarReserva.class.getName());
 
@@ -68,14 +77,15 @@ public class RealizarReserva extends javax.swing.JDialog {
         CmbHorario = new javax.swing.JComboBox<>();
         BtPago = new javax.swing.JButton();
         LblSalida = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        CmbSalida = new javax.swing.JComboBox<>();
+        BtnGuardarReserva = new javax.swing.JButton();
         LblFecha = new javax.swing.JLabel();
         TxtFecha = new javax.swing.JTextField();
         LblAdelanto = new javax.swing.JLabel();
         TxtAdelanto = new javax.swing.JTextField();
         LblNom = new javax.swing.JLabel();
         TxtCancha = new javax.swing.JTextField();
+        BtnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -83,6 +93,7 @@ public class RealizarReserva extends javax.swing.JDialog {
         LblCliente.setText("CLIENTE");
 
         CmbClientes.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        CmbClientes.addActionListener(this::CmbClientesActionPerformed);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -101,8 +112,10 @@ public class RealizarReserva extends javax.swing.JDialog {
 
         ChkArbitro.addActionListener(this::ChkArbitroActionPerformed);
 
+        CntidadBalon.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         CntidadBalon.addChangeListener(this::CntidadBalonStateChanged);
 
+        CntidadChaleco.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         CntidadChaleco.addChangeListener(this::CntidadChalecoStateChanged);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -172,7 +185,8 @@ public class RealizarReserva extends javax.swing.JDialog {
         LblHorario.setText("HORARIO");
 
         CmbHorario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        CmbHorario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "08:00 ", "09:00 ", "10:00 ", "11:00 ", "14:00 ", "15:00 ", "16:00 ", "17:00 ", "18:00 ", "19:00 ", "20:00 ", "21:00 ", "22:00 " }));
+        CmbHorario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "08:00", "09:00", "10:00 ", "11:00 ", "12:00", "13:00", "14:00 ", "15:00 ", "16:00 ", "17:00 ", "18:00 ", "19:00 ", "20:00 ", "21:00 ", "22:00 " }));
+        CmbHorario.addActionListener(this::CmbHorarioActionPerformed);
 
         BtPago.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         BtPago.setText("PAGAR");
@@ -181,11 +195,13 @@ public class RealizarReserva extends javax.swing.JDialog {
         LblSalida.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         LblSalida.setText("SALIDA");
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "09:00 ", "10:00 ", "11:00 ", "14:00 ", "15:00 ", "16:00 ", "17:00 ", "18:00 ", "19:00 ", "20:00 ", "21:00 ", "22:00 ", "23:00" }));
+        CmbSalida.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        CmbSalida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "09:00 ", "10:00 ", "11:00 ", "12:00", "13:00", "14:00 ", "15:00 ", "16:00 ", "17:00 ", "18:00 ", "19:00 ", "20:00 ", "21:00 ", "22:00 ", "23:00" }));
+        CmbSalida.addActionListener(this::CmbSalidaActionPerformed);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton1.setText("GUARDAR");
+        BtnGuardarReserva.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        BtnGuardarReserva.setText("GUARDAR");
+        BtnGuardarReserva.addActionListener(this::BtnGuardarReservaActionPerformed);
 
         LblFecha.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         LblFecha.setText("FECHA");
@@ -200,6 +216,10 @@ public class RealizarReserva extends javax.swing.JDialog {
 
         TxtCancha.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        BtnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        BtnCancelar.setText("CANCELAR");
+        BtnCancelar.addActionListener(this::BtnCancelarActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -211,9 +231,11 @@ public class RealizarReserva extends javax.swing.JDialog {
                         .addComponent(LblAdelanto)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BtPago)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(28, 28, 28))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnGuardarReserva)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnCancelar)
+                        .addGap(33, 33, 33))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -238,7 +260,7 @@ public class RealizarReserva extends javax.swing.JDialog {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(TxtFecha, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(CmbSalida, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(CmbHorario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -265,7 +287,7 @@ public class RealizarReserva extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LblSalida)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(CmbSalida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LblTotal)
@@ -275,7 +297,8 @@ public class RealizarReserva extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(BtPago)
-                            .addComponent(jButton1)))
+                            .addComponent(BtnGuardarReserva)
+                            .addComponent(BtnCancelar)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -303,8 +326,171 @@ public class RealizarReserva extends javax.swing.JDialog {
     }//GEN-LAST:event_CntidadChalecoStateChanged
 
     private void BtPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtPagoActionPerformed
-        // TODO add your handling code here:
+       if(codReserva > 0){
+       TxtAdelanto.setText(TxtTotal.getText());
+       if(Reserva.actualizarEstado(codReserva, EstadoReserva.CONFIRMADA, 0.0)){
+           JOptionPane.showMessageDialog(this, "Pago y Reserva Confirmada");
+           this.dispose();
+        }
+       return;
+       }
+        
+       String cliente = CmbClientes.getSelectedItem().toString();
+       Cliente client = new Cliente(cliente);
+       String cancha = TxtCancha.getText();
+       LocalDate fecha = LocalDate.parse(TxtFecha.getText().trim());
+       LocalTime horaInicio = LocalTime.parse(CmbHorario.getSelectedItem().toString().trim());
+       LocalTime horaFin = LocalTime.parse(CmbSalida.getSelectedItem().toString().trim());
+       
+       if(HorarioOcupado(cancha, fecha, horaInicio, horaFin)){
+       JOptionPane.showMessageDialog(this, "El horario seleccionado esta ocupado");
+       return;
+       }
+       
+       double total = Double.parseDouble(TxtTotal.getText());
+       double saldoPen = 0.0;
+       TxtAdelanto.setText(String.valueOf(total));
+       
+       int cod = 1;
+       try{
+           FileReader fr = new FileReader("datos/reservas.txt");
+           BufferedReader br = new BufferedReader(fr);
+           String linea = br.readLine();
+           while(linea != null){
+               if(!linea.equals("")){
+                   String[] datos = linea.split(",");
+                   cod = Integer.parseInt(datos[0])+1;
+               }
+               linea = br.readLine();
+           }
+           br.close();
+       }catch(IOException e){
+       }
+       Reserva reserva = new Reserva(
+         cod, client, new Cancha(TxtCancha.getText()), fecha, horaInicio, horaFin,
+         total, saldoPen,EstadoReserva.CONFIRMADA,null,null, "Operador 1"
+       );
+       if(reserva.guardarReserva()){
+           JOptionPane.showMessageDialog(this, "Pago y Reserva Confirmada");
+           this.dispose();
+       }
+       
     }//GEN-LAST:event_BtPagoActionPerformed
+
+    private void BtnGuardarReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarReservaActionPerformed
+       try {
+        String cliente = CmbClientes.getSelectedItem().toString();
+        Cliente client = new Cliente(cliente);
+        String cancha = TxtCancha.getText();
+        LocalDate fecha = LocalDate.parse(TxtFecha.getText().trim());
+        LocalTime horaInicio = LocalTime.parse(CmbHorario.getSelectedItem().toString().trim());
+        LocalTime horaFin = LocalTime.parse(CmbSalida.getSelectedItem().toString().trim());
+
+        double total = Double.parseDouble(TxtTotal.getText());
+        double adelanto = 0.0;
+        if (!TxtAdelanto.getText().isEmpty()) {
+            adelanto = Double.parseDouble(TxtAdelanto.getText());
+        }
+
+        double saldoPen = total - adelanto;
+
+        EstadoReserva estado;
+        if (saldoPen == 0) {
+            estado = EstadoReserva.CONFIRMADA;
+        } else {
+            estado = EstadoReserva.PENDIENTE;
+        }
+
+        if (codReserva > 0) {
+            if (Reserva.actualizarEstado(codReserva, estado, saldoPen)) {
+                JOptionPane.showMessageDialog(this, "Reserva No: " + codReserva + " actualizada con éxito");
+                this.dispose();
+            }
+            return; 
+        }
+
+        if (HorarioOcupado(cancha, fecha, horaInicio, horaFin)) {
+            JOptionPane.showMessageDialog(this, "El horario seleccionado ya esta ocupado");
+            return;
+        }   
+
+        int cod = 1;
+
+        try {
+            FileReader fr = new FileReader("datos/reservas.txt");
+            BufferedReader br = new BufferedReader(fr);
+
+            String linea;
+            linea = br.readLine();
+            while (linea != null) {
+                if (!linea.equals("")) {
+                    String[] datos = linea.split(",");
+                    cod = Integer.parseInt(datos[0]) + 1;
+                }
+                linea = br.readLine();
+            }
+            br.close();
+        } catch (IOException e) {
+        }
+
+        Reserva reserva = new Reserva(
+            cod, client, new Cancha(TxtCancha.getText()), fecha, horaInicio, 
+            horaFin, total, saldoPen, estado, null, null, "Operador1"
+        );
+
+        if (reserva.guardarReserva()) {
+            JOptionPane.showMessageDialog(this, "Reserva Guardada");
+            this.dispose();
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    }
+    }//GEN-LAST:event_BtnGuardarReservaActionPerformed
+
+    private void CmbClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CmbClientesActionPerformed
+        if(CmbClientes.getSelectedItem() != null){
+        cargarReserva();
+        }
+    }//GEN-LAST:event_CmbClientesActionPerformed
+
+    private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
+        if (codReserva > 0) {
+        int resp = JOptionPane.showConfirmDialog(
+            this,
+            "¿Desea cancelar la reserva?",
+            "Confirmar cancelación",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (resp == JOptionPane.YES_OPTION) {
+            double total = Double.parseDouble(TxtTotal.getText().trim());
+
+            double adelanto = 0.0;
+            if (!TxtAdelanto.getText().trim().isEmpty()) {
+                adelanto = Double.parseDouble(TxtAdelanto.getText().trim());
+            }
+
+            double saldoPen = total - adelanto;
+
+            if (Reserva.actualizarEstado(codReserva, EstadoReserva.CANCELADA, saldoPen)) {
+                JOptionPane.showMessageDialog(this, "Reserva Cancelada");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se actualizo el archivo");
+            }
+        }
+    } else {
+        this.dispose();
+        }
+    }//GEN-LAST:event_BtnCancelarActionPerformed
+
+    private void CmbHorarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CmbHorarioActionPerformed
+        calcularTotal();
+    }//GEN-LAST:event_CmbHorarioActionPerformed
+
+    private void CmbSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CmbSalidaActionPerformed
+        calcularTotal();
+    }//GEN-LAST:event_CmbSalidaActionPerformed
 
     public void CargarClientes(){
         try{
@@ -321,17 +507,63 @@ public class RealizarReserva extends javax.swing.JDialog {
                String nombre = datos[1];
                
                CmbClientes.addItem(cod + " - "+nombre);
-               linea = br.readLine();
                 }
+            linea = br.readLine();
             }
             br.close();
         }catch (Exception e){
-            JOptionPane.showMessageDialog(this,"Error al cargar los clientes");
+            JOptionPane.showMessageDialog(this,"Error al cargar los clientes" + e.getMessage());
         }
     }
     
+    public void cargarReserva() {
+    try{
+        if(CmbClientes.getSelectedItem() == null){
+        return;
+    }    
+    String clienteSeleccionado = CmbClientes.getSelectedItem().toString().trim();
+    Reserva reserva = Reserva.buscarReserva(clienteSeleccionado);
+
+        if (reserva != null) {
+            this.codReserva = reserva.getCod_reserva();
+            TxtCancha.setText(reserva.getCancha().getNombre());
+            TxtFecha.setText(reserva.getFecha().toString());
+            CmbHorario.setSelectedItem(reserva.getHora_inicio().toString().trim());
+            CmbSalida.setSelectedItem(reserva.getHora_fin().toString().trim());
+            TxtTotal.setText(String.valueOf(reserva.getTotal()));
+        
+            double adelantoInicial = reserva.getTotal() - reserva.getSaldo_pendiente();
+            TxtAdelanto.setText(String.valueOf(adelantoInicial));
+
+            JOptionPane.showMessageDialog(this, "Se cargó la reserva pendiente No: " + codReserva);
+        } else {
+            this.codReserva = 0;
+        }
+    }catch(Exception e){
+        JOptionPane.showMessageDialog(this, "Error al cargar la reserva" + e.getMessage());
+    }
+    }
+    
         public void calcularTotal(){
+            try{
+                if(CmbHorario.getSelectedItem() == null || CmbSalida.getSelectedItem() == null){
+                return;
+            }
+            
+            LocalTime horaInicio = LocalTime.parse(CmbHorario.getSelectedItem().toString().trim());
+            LocalTime horaFin = LocalTime.parse(CmbSalida.getSelectedItem().toString().trim());
+            
+            int hInicio = horaInicio.getHour();
+            int hFin = horaFin.getHour();
+            
+            int horas = hFin - hInicio;
+            
+            if(horas <=0){
+                horas = 1;
+            }
+            
             double total = Double.parseDouble(this.precio);
+            total = total * horas;
             int balones = Integer.parseInt(CntidadBalon.getValue().toString());
             int chalecos = Integer.parseInt(CntidadChaleco.getValue().toString());
             
@@ -343,9 +575,11 @@ public class RealizarReserva extends javax.swing.JDialog {
             total = total + (chalecos*precioChalecos);
             
             if(ChkArbitro.isSelected()){
-                total = total + precioArbitro;
+                total = total + (precioArbitro*horas);
             }
             TxtTotal.setText(String.valueOf(total));
+            }catch(Exception e){
+            }
     }
     /**
      * @param args the command line arguments
@@ -354,9 +588,12 @@ public class RealizarReserva extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtPago;
+    private javax.swing.JButton BtnCancelar;
+    private javax.swing.JButton BtnGuardarReserva;
     private javax.swing.JCheckBox ChkArbitro;
     private javax.swing.JComboBox<String> CmbClientes;
     private javax.swing.JComboBox<String> CmbHorario;
+    private javax.swing.JComboBox<String> CmbSalida;
     private javax.swing.JSpinner CntidadBalon;
     private javax.swing.JSpinner CntidadChaleco;
     private javax.swing.JLabel LblAdelanto;
@@ -371,8 +608,6 @@ public class RealizarReserva extends javax.swing.JDialog {
     private javax.swing.JTextField TxtCancha;
     private javax.swing.JTextField TxtFecha;
     private javax.swing.JTextField TxtTotal;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;

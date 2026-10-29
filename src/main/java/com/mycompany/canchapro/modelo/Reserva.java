@@ -3,9 +3,15 @@ package com.mycompany.canchapro.modelo;
 import com.mycompany.canchapro.modelo.Cliente;
 import com.mycompany.canchapro.modelo.Cancha;
 import com.mycompany.canchapro.modelo.misenums.EstadoReserva;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
+import javax.swing.JOptionPane;
 
 public class Reserva {
     private int cod_reserva;
@@ -168,8 +174,144 @@ public class Reserva {
         this.operador_reserva = operador_reserva;
     }
 
+   public boolean guardarReserva(){
+   try{
+       FileWriter fr = new FileWriter("datos/reservas.txt", true);
+       PrintWriter pw = new PrintWriter(fr);
+       
+       String linea = getCod_reserva() + "," + getCliente().getNombre()+ "," + getCancha().getNombre() + "," + getFecha() + "," + getHora_inicio() + "," + getHora_fin() + "," + getTotal() + "," + getSaldo_pendiente() + "," + getEstado_reserva();
+       
+       pw.println(linea);
+       pw.close();
+       
+       return true;
+   }catch (IOException e){
+   JOptionPane.showMessageDialog(null, "Error al guardar la Reserva");
+   return false;
+    }
+   }
+   
+   public static Reserva buscarReserva(String nombre){
+       try{
+           FileReader fr = new FileReader("datos/reservas.txt");
+           BufferedReader br = new BufferedReader(fr);
+           String linea;
+           
+           linea = br.readLine();
+           while(linea !=null){
+               if(!linea.equals("")){
+                   String[] datos = linea.split(",");
+                   if(datos.length>=9){
+                       String cliente = datos[1];
+                       String estado = datos[8];
+                       
+                    if(cliente.equalsIgnoreCase(nombre) && (estado.equalsIgnoreCase("PENDIENTE"))){
+                        int cod = Integer.parseInt(datos[0]);
+                        String cancha = datos[2];
+                        LocalDate fecha = LocalDate.parse(datos[3].trim());
+                        LocalTime horaInicio = LocalTime.parse(datos[4].trim());
+                        LocalTime horaFin = LocalTime.parse(datos[5].trim());
+                        double total = Double.parseDouble(datos[6]);
+                        double saldoPen = Double.parseDouble(datos[7]);
+                        
+                        return new Reserva(
+                                cod, new Cliente(cliente), new Cancha(cancha), fecha, horaInicio, horaFin, total,
+                                saldoPen,EstadoReserva.PENDIENTE,null,null,"Operador 1"
+                        );
+                    }
+                   }
+                   linea = br.readLine();
+               }
+           }
+       }catch(IOException e){
+       }
+       return null;
+   }
+   
+   public static boolean actualizarEstado(int cod, EstadoReserva nuevoEst, double nuevoSald){
+   String[] nuevaLinea = new String[100];
+   int cont = 0;
+   boolean actu = false;
+   
+   try{
+       FileReader fr = new FileReader("datos/reservas.txt");
+       BufferedReader br = new BufferedReader(fr);
+       String linea;
+       
+       linea = br.readLine();
+       while(linea != null){
+           if(!linea.equals("")){
+           String[] datos = linea.split(",");
+           if(datos.length>=9){
+               int codigo = Integer.parseInt(datos[0].trim());
+           if(codigo == cod){
+               datos[7] = String.valueOf(nuevoSald);
+               datos[8] = nuevoEst.name();
+               linea = String.join(",",datos); 
+               actu = true;
+           }
+           }
+           nuevaLinea[cont] = linea;
+           cont++;
+           }
+           linea = br.readLine();
+       }
+       br.close();
+   }catch(IOException e){
+      return false;
+   }
+   
+   if(actu){
+       try{
+           FileWriter fw = new FileWriter("datos/reservas.txt", false);
+           PrintWriter pw = new PrintWriter(fw);
+           
+           for(int i = 0; i<cont; i++){
+               pw.println(nuevaLinea[i]);
+           }
+           pw.close();
+           return true;
+       }catch(IOException e){
+           return false;
+       }
+   }
+    return false;       
+   }
+   
     
-    
-    
+   
+   public static boolean HorarioOcupado(String cancha, LocalDate fecha, LocalTime horaInicio, LocalTime horaFin) {
+    try {
+        FileReader fr = new FileReader("datos/reservas.txt");
+        BufferedReader br = new BufferedReader(fr);
+        String linea;
+
+        linea = br.readLine();
+        while (linea != null) {
+            if (!linea.equals("")) {
+        String[] datos = linea.split(",");
+
+        String canchaExistente = datos[2].trim();
+        LocalDate fechaExistente = LocalDate.parse(datos[3].trim());
+        LocalTime inicioExistente = LocalTime.parse(datos[4].trim());
+        LocalTime finExistente = LocalTime.parse(datos[5].trim());
+        String estadoExistente = datos[8].trim();
+
+        if (!estadoExistente.equalsIgnoreCase("CANCELADA")) {
+           if (canchaExistente.equalsIgnoreCase(cancha) && fechaExistente.equals(fecha)) {
+              if (horaInicio.isBefore(finExistente) && horaFin.isAfter(inicioExistente)) {
+                    br.close();
+                    return true;
+              }
+        }
+     }
+    }
+    linea = br.readLine();
+    }
+    br.close();
+        } catch (IOException e) {
+    }
+    return false; 
+    }
     
 }

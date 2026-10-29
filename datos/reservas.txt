@@ -1,0 +1,4 @@
+1,1 - Juan Chas,La Bombonera,2026-10-29,08:00,09:00,100.0,50.0,CANCELADA
+3,2 - Maria Lopez,La Bombonera,2026-10-29,14:00,15:00,100.0,0.0,CONFIRMADA
+4,3 - Cristian Galeano,La Bombonera,2026-10-29,15:00,16:00,100.0,0.0,CONFIRMADA
+5,2 - Maria Lopez,La Bombonera,2026-10-30,08:00,09:00,100.0,100.0,PENDIENTE
