@@ -42,6 +42,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         MnuReserva = new javax.swing.JMenu();
         MnuTienda = new javax.swing.JMenu();
         MnuReporte = new javax.swing.JMenu();
+        jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,6 +50,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         Mnu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
+        MnuCancha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconoCancha.png"))); // NOI18N
         MnuCancha.setText("CANCHAS");
         MnuCancha.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -58,6 +60,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         MnuCancha.addActionListener(this::MnuCanchaActionPerformed);
         Mnu.add(MnuCancha);
 
+        MnuReserva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/reservaicono.png"))); // NOI18N
         MnuReserva.setText("RESERVA");
         MnuReserva.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -67,6 +70,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         MnuReserva.addActionListener(this::MnuReservaActionPerformed);
         Mnu.add(MnuReserva);
 
+        MnuTienda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoTienda.png"))); // NOI18N
         MnuTienda.setText("TIENDA");
         MnuTienda.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -75,6 +79,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
         Mnu.add(MnuTienda);
 
+        MnuReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoReporte.png"))); // NOI18N
         MnuReporte.setText("REPORTES");
         MnuReporte.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -82,6 +87,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         });
         Mnu.add(MnuReporte);
+
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/usuario.png"))); // NOI18N
+        jMenu1.setText("USUARIOS");
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu1MouseClicked(evt);
+            }
+        });
+        Mnu.add(jMenu1);
 
         setJMenuBar(Mnu);
 
@@ -93,7 +107,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Contenido, javax.swing.GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+            .addComponent(Contenido, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
         );
 
         pack();
@@ -122,6 +136,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private void MnuReporteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MnuReporteMouseClicked
         MostrarPanel(new Reportes());
     }//GEN-LAST:event_MnuReporteMouseClicked
+
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
+        MostrarPanel(new Usuarios());
+    }//GEN-LAST:event_jMenu1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -166,5 +184,6 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu MnuReporte;
     private javax.swing.JMenu MnuReserva;
     private javax.swing.JMenu MnuTienda;
+    private javax.swing.JMenu jMenu1;
     // End of variables declaration//GEN-END:variables
 }

@@ -191,7 +191,7 @@ public class Reserva {
     }
    }
    
-   public static Reserva buscarReserva(String nombre){
+   public static Reserva buscarReserva(String nombre, String nomCancha, String fechaSel){
        try{
            FileReader fr = new FileReader("datos/reservas.txt");
            BufferedReader br = new BufferedReader(fr);
@@ -203,17 +203,19 @@ public class Reserva {
                    String[] datos = linea.split(",");
                    if(datos.length>=9){
                        String cliente = datos[1];
+                       String cancha = datos[2];
+                       String fechatxt = datos[3].trim();
                        String estado = datos[8];
                        
-                    if(cliente.equalsIgnoreCase(nombre) && (estado.equalsIgnoreCase("PENDIENTE"))){
+                    if(cliente.equalsIgnoreCase(nombre) && cancha.equalsIgnoreCase(nomCancha) && fechatxt.equals(fechaSel) && estado.equalsIgnoreCase("PENDIENTE")){
                         int cod = Integer.parseInt(datos[0]);
-                        String cancha = datos[2];
-                        LocalDate fecha = LocalDate.parse(datos[3].trim());
+                        LocalDate fecha = LocalDate.parse(fechatxt);
                         LocalTime horaInicio = LocalTime.parse(datos[4].trim());
                         LocalTime horaFin = LocalTime.parse(datos[5].trim());
                         double total = Double.parseDouble(datos[6]);
                         double saldoPen = Double.parseDouble(datos[7]);
                         
+                        br.close();
                         return new Reserva(
                                 cod, new Cliente(cliente), new Cancha(cancha), fecha, horaInicio, horaFin, total,
                                 saldoPen,EstadoReserva.PENDIENTE,null,null,"Operador 1"
@@ -223,6 +225,7 @@ public class Reserva {
                    linea = br.readLine();
                }
            }
+           br.close();
        }catch(IOException e){
        }
        return null;

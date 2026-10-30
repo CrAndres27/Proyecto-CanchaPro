@@ -181,6 +181,8 @@ public class RealizarReserva extends javax.swing.JDialog {
         LblTotal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         LblTotal.setText("TOTAL");
 
+        TxtTotal.addActionListener(this::TxtTotalActionPerformed);
+
         LblHorario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         LblHorario.setText("HORARIO");
 
@@ -492,6 +494,10 @@ public class RealizarReserva extends javax.swing.JDialog {
         calcularTotal();
     }//GEN-LAST:event_CmbSalidaActionPerformed
 
+    private void TxtTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TxtTotalActionPerformed
+
     public void CargarClientes(){
         try{
             FileReader fr = new FileReader("datos/clientes.txt");
@@ -522,7 +528,9 @@ public class RealizarReserva extends javax.swing.JDialog {
         return;
     }    
     String clienteSeleccionado = CmbClientes.getSelectedItem().toString().trim();
-    Reserva reserva = Reserva.buscarReserva(clienteSeleccionado);
+    String canchaActual = TxtCancha.getText();
+    String fechaActual = TxtFecha.getText();
+    Reserva reserva = Reserva.buscarReserva(clienteSeleccionado, canchaActual, fechaActual);
 
         if (reserva != null) {
             this.codReserva = reserva.getCod_reserva();
@@ -530,22 +538,29 @@ public class RealizarReserva extends javax.swing.JDialog {
             TxtFecha.setText(reserva.getFecha().toString());
             CmbHorario.setSelectedItem(reserva.getHora_inicio().toString().trim());
             CmbSalida.setSelectedItem(reserva.getHora_fin().toString().trim());
-            TxtTotal.setText(String.valueOf(reserva.getTotal()));
         
             double adelantoInicial = reserva.getTotal() - reserva.getSaldo_pendiente();
             TxtAdelanto.setText(String.valueOf(adelantoInicial));
+            
+            double resta = reserva.getSaldo_pendiente();
+            TxtTotal.setText(String.valueOf(resta));
 
             JOptionPane.showMessageDialog(this, "Se cargó la reserva pendiente No: " + codReserva);
         } else {
             this.codReserva = 0;
+            TxtAdelanto.setText("0.0");
         }
     }catch(Exception e){
-        JOptionPane.showMessageDialog(this, "Error al cargar la reserva" + e.getMessage());
-    }
+        JOptionPane.showMessageDialog(this, "Error al cargar la reserva: " + e.getMessage());
+        }
     }
     
         public void calcularTotal(){
             try{
+                if(this.codReserva > 0){
+                    return;
+                }
+                
                 if(CmbHorario.getSelectedItem() == null || CmbSalida.getSelectedItem() == null){
                 return;
             }

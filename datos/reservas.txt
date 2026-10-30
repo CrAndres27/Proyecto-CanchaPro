@@ -1,4 +1,7 @@
 1,1 - Juan Chas,La Bombonera,2026-10-29,08:00,09:00,100.0,50.0,CANCELADA
 3,2 - Maria Lopez,La Bombonera,2026-10-29,14:00,15:00,100.0,0.0,CONFIRMADA
 4,3 - Cristian Galeano,La Bombonera,2026-10-29,15:00,16:00,100.0,0.0,CONFIRMADA
-5,2 - Maria Lopez,La Bombonera,2026-10-30,08:00,09:00,100.0,100.0,PENDIENTE
+5,2 - Maria Lopez,La Bombonera,2026-10-30,08:00,09:00,100.0,0.0,CONFIRMADA
+6,3 - Cristian Galeano,La Bombonera,2026-10-30,20:00,21:00,370.0,0.0,CONFIRMADA
+7,1 - Juan Chas,La Bombonera,2026-10-31,20:00,21:00,135.0,60.0,PENDIENTE
+8,3 - Cristian Galeano,El Monumental,2026-10-31,09:00,11:00,400.0,200.0,PENDIENTE
