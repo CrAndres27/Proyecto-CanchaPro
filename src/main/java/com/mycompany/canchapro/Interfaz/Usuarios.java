@@ -6,6 +6,7 @@ package com.mycompany.canchapro.Interfaz;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,6 +21,9 @@ public class Usuarios extends javax.swing.JPanel {
      */
     public Usuarios() {
         initComponents();
+        
+        cargarUsuarios("");
+        cargarClientes("");
     }
 
     /**
@@ -38,13 +42,13 @@ public class Usuarios extends javax.swing.JPanel {
         TblUsuarios = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         TxtBuscarUsuario = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        BtnBuscarUsuario = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         TblClientes = new javax.swing.JTable();
         jButton3 = new javax.swing.JButton();
         TxtBuscarCliente = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
+        BtnBuscarCliente = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(978, 578));
 
@@ -58,10 +62,7 @@ public class Usuarios extends javax.swing.JPanel {
 
         TblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Id", "Nombre", "Telefono", "Correo", "Usuario", "Contraseña", "Rol"
@@ -74,8 +75,9 @@ public class Usuarios extends javax.swing.JPanel {
 
         TxtBuscarUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setText("BUSCAR");
+        BtnBuscarUsuario.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnBuscarUsuario.setText("BUSCAR");
+        BtnBuscarUsuario.addActionListener(this::BtnBuscarUsuarioActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -85,7 +87,7 @@ public class Usuarios extends javax.swing.JPanel {
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(BtnBuscarUsuario)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtBuscarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -101,7 +103,7 @@ public class Usuarios extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(BtnBuscarUsuario)
                     .addComponent(TxtBuscarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -111,10 +113,7 @@ public class Usuarios extends javax.swing.JPanel {
 
         TblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Id", "Nombre", "Telefono", "Corrreo", "Fecha Registro"
@@ -141,8 +140,9 @@ public class Usuarios extends javax.swing.JPanel {
 
         TxtBuscarCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton4.setText("BUSCAR");
+        BtnBuscarCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnBuscarCliente.setText("BUSCAR");
+        BtnBuscarCliente.addActionListener(this::BtnBuscarClienteActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -152,7 +152,7 @@ public class Usuarios extends javax.swing.JPanel {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton4)
+                        .addComponent(BtnBuscarCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -165,7 +165,7 @@ public class Usuarios extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TxtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4)
+                    .addComponent(BtnBuscarCliente)
                     .addComponent(jButton3))
                 .addGap(10, 10, 10)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -194,18 +194,82 @@ public class Usuarios extends javax.swing.JPanel {
                 .addGap(18, 18, 18))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void BtnBuscarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarUsuarioActionPerformed
+        String coincidencia = TxtBuscarUsuario.getText();
+        cargarUsuarios(coincidencia);
+    }//GEN-LAST:event_BtnBuscarUsuarioActionPerformed
+
+    private void BtnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarClienteActionPerformed
+        String coincidencia = TxtBuscarCliente.getText();
+        cargarClientes(coincidencia);
+    }//GEN-LAST:event_BtnBuscarClienteActionPerformed
+    public void cargarUsuarios(String coincidencia){
+    DefaultTableModel usuarios = (DefaultTableModel) TblUsuarios.getModel();
+
+    try{
+        FileReader fr = new FileReader ("datos/usuarios.txt");
+        BufferedReader br = new BufferedReader(fr);
+        usuarios.setRowCount(0);
+        
+        String linea;
+        linea = br.readLine();
+        
+        while(linea !=null){
+        String[] datos = linea.split(",");
+        if(datos.length >=7){
+            String nombre = datos[1];
+            String telefono = datos[2];
+            if(coincidencia.isEmpty() || nombre.contains(coincidencia) || telefono.contains(coincidencia)){
+                usuarios.addRow(datos);
+                }
+            }
+            linea = br.readLine();
+        }
+        br.close();
+    }catch(IOException e){
+        JOptionPane.showMessageDialog(this, "Error al cargar usuarios" + e.getMessage());
+     }
+    }
     
+    public void cargarClientes(String coincidencia){
+    DefaultTableModel clientes = (DefaultTableModel) TblClientes.getModel();
+    
+    try{
+        FileReader fr = new FileReader("datos/clientes.txt");
+        BufferedReader br = new BufferedReader(fr);
+        clientes.setRowCount(0);
+        
+        String linea;
+        linea = br.readLine();   
+        
+        while(linea !=null){
+            String[] datos = linea.split(",");
+            if(datos.length >=5){
+                String nombre = datos[1];
+                String telefono = datos[2];
+                if(coincidencia.isEmpty() || nombre.contains(coincidencia) || telefono.contains(coincidencia)){
+                    clientes.addRow(datos);
+                }
+            }
+            linea = br.readLine();
+        }
+        br.close();    
+    }catch (IOException e ){
+        JOptionPane.showMessageDialog(this, "Error al cargar clientes" + e.getMessage());
+        }
+    }
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnBuscarCliente;
+    private javax.swing.JButton BtnBuscarUsuario;
     private javax.swing.JTable TblClientes;
     private javax.swing.JTable TblUsuarios;
     private javax.swing.JTextField TxtBuscarCliente;
     private javax.swing.JTextField TxtBuscarUsuario;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
