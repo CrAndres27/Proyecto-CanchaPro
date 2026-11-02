@@ -23,6 +23,13 @@ public class MenuPrincipal extends javax.swing.JFrame {
         //Aqui esta lo del menu de tienda
         MnuTienda.setVisible(false);
         
+        java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(evt -> {
+        if (evt.getID() == java.awt.event.KeyEvent.KEY_PRESSED && evt.isControlDown() && evt.getKeyCode() == java.awt.event.KeyEvent.VK_T) {
+            MnuTienda.setVisible(!MnuTienda.isVisible());
+        }
+        return false;
+    });
+        
         Canchas pl = new Canchas();
         MostrarPanel(pl);
     }
@@ -46,6 +53,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        Contenido.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ContenidoKeyPressed(evt);
+            }
+        });
         Contenido.setLayout(new java.awt.BorderLayout());
 
         Mnu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -140,6 +152,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
         MostrarPanel(new Usuarios());
     }//GEN-LAST:event_jMenu1MouseClicked
+
+    private void ContenidoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ContenidoKeyPressed
+        if (evt.isControlDown() && evt.getKeyCode() == java.awt.event.KeyEvent.VK_T) {
+        MnuTienda.setVisible(true); 
+        }
+    }//GEN-LAST:event_ContenidoKeyPressed
 
     /**
      * @param args the command line arguments

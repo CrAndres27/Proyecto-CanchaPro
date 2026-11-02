@@ -7,6 +7,7 @@ package com.mycompany.canchapro.Interfaz;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -40,13 +41,13 @@ public class Usuarios extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TblUsuarios = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
+        BtnNuevoUsuario = new javax.swing.JButton();
         TxtBuscarUsuario = new javax.swing.JTextField();
         BtnBuscarUsuario = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         TblClientes = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
+        BtnNuevoCliente = new javax.swing.JButton();
         TxtBuscarCliente = new javax.swing.JTextField();
         BtnBuscarCliente = new javax.swing.JButton();
 
@@ -60,6 +61,7 @@ public class Usuarios extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("USUARIOS");
 
+        TblUsuarios.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         TblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -68,10 +70,16 @@ public class Usuarios extends javax.swing.JPanel {
                 "Id", "Nombre", "Telefono", "Correo", "Usuario", "Contraseña", "Rol"
             }
         ));
+        TblUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TblUsuariosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(TblUsuarios);
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setText("NUEVO");
+        BtnNuevoUsuario.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnNuevoUsuario.setText("NUEVO");
+        BtnNuevoUsuario.addActionListener(this::BtnNuevoUsuarioActionPerformed);
 
         TxtBuscarUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -91,10 +99,10 @@ public class Usuarios extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtBuscarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(BtnNuevoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(309, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 945, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,12 +113,13 @@ public class Usuarios extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnBuscarUsuario)
                     .addComponent(TxtBuscarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(BtnNuevoUsuario))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
+        TblClientes.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         TblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -127,6 +136,11 @@ public class Usuarios extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        TblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TblClientesMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(TblClientes);
         if (TblClientes.getColumnModel().getColumnCount() > 0) {
             TblClientes.getColumnModel().getColumn(0).setResizable(false);
@@ -135,8 +149,9 @@ public class Usuarios extends javax.swing.JPanel {
             TblClientes.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setText("NUEVO");
+        BtnNuevoCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnNuevoCliente.setText("NUEVO");
+        BtnNuevoCliente.addActionListener(this::BtnNuevoClienteActionPerformed);
 
         TxtBuscarCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -151,13 +166,13 @@ public class Usuarios extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 952, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(BtnBuscarCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(TxtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 649, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(BtnNuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -166,7 +181,7 @@ public class Usuarios extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TxtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnBuscarCliente)
-                    .addComponent(jButton3))
+                    .addComponent(BtnNuevoCliente))
                 .addGap(10, 10, 10)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(81, Short.MAX_VALUE))
@@ -204,6 +219,73 @@ public class Usuarios extends javax.swing.JPanel {
         String coincidencia = TxtBuscarCliente.getText();
         cargarClientes(coincidencia);
     }//GEN-LAST:event_BtnBuscarClienteActionPerformed
+
+    private void TblUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TblUsuariosMouseClicked
+        if(evt.getClickCount() == 1){
+        int fila = TblUsuarios.getSelectedRow();
+        if(fila !=-1){
+            String id = TblUsuarios.getValueAt(fila, 0).toString();
+            String nombre = TblUsuarios.getValueAt(fila, 1).toString();
+            String telefono = TblUsuarios.getValueAt(fila, 2).toString();
+            String correo = TblUsuarios.getValueAt(fila, 3).toString();
+            String usuario = TblUsuarios.getValueAt(fila, 4).toString();
+            String contra = TblUsuarios.getValueAt(fila, 5).toString();
+            String rol = TblUsuarios.getValueAt(fila, 6).toString();
+            
+            PanelUsuario pu = new PanelUsuario(null, true, id, nombre, telefono, correo, usuario, contra,rol);
+            pu.setLocationRelativeTo(null);
+            pu.setVisible(true);
+            
+            cargarUsuarios("");
+            }
+        }
+    }//GEN-LAST:event_TblUsuariosMouseClicked
+
+    private void TblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TblClientesMouseClicked
+        if(evt.getClickCount() == 1){
+        int fila = TblClientes.getSelectedRow();
+        if(fila !=-1){
+            String id = TblClientes.getValueAt(fila, 0).toString();
+            String nombre = TblClientes.getValueAt(fila, 1).toString();
+            String telefono = TblClientes.getValueAt(fila, 2).toString();
+            String correo = TblClientes.getValueAt(fila, 3).toString();
+            String fecha = TblClientes.getValueAt(fila, 4).toString().trim();
+            
+            PanelCliente pc = new PanelCliente(null, true, id, nombre, telefono, correo, fecha);
+            pc.setLocationRelativeTo(null);
+            pc.setVisible(true);
+            
+            cargarClientes("");
+            }
+        }
+    }//GEN-LAST:event_TblClientesMouseClicked
+
+    private void BtnNuevoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNuevoUsuarioActionPerformed
+        try{
+        String Idnuevo = ObtenerCodigo("datos/usuarios.txt");
+        
+        NuevoUsuario nu = new NuevoUsuario(null, true, Idnuevo, "","","","","");
+        nu.setLocationRelativeTo(null);
+        nu.setVisible(true);
+        cargarUsuarios("");
+        } catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
+        }
+    }//GEN-LAST:event_BtnNuevoUsuarioActionPerformed
+
+    private void BtnNuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNuevoClienteActionPerformed
+        try{
+        String Idnuevo = ObtenerCodigo("datos/clientes.txt");
+        String fecha = java.time.LocalDate.now().toString();
+        
+        NuevoCliente nc = new NuevoCliente(null, true, Idnuevo,"","","",fecha);
+        nc.setLocationRelativeTo(null);
+        nc.setVisible(true);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Error "+e.getMessage());
+        }
+    }//GEN-LAST:event_BtnNuevoClienteActionPerformed
+    
     public void cargarUsuarios(String coincidencia){
     DefaultTableModel usuarios = (DefaultTableModel) TblUsuarios.getModel();
 
@@ -259,17 +341,45 @@ public class Usuarios extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(this, "Error al cargar clientes" + e.getMessage());
         }
     }
+    
+    public String ObtenerCodigo(String rutaArchivo){
+        int idMayor = 0;
+        int idActual;
+        
+        try{
+            FileReader fr = new FileReader(rutaArchivo);
+            BufferedReader br = new BufferedReader(fr);
+            
+            String linea;
+            linea = br.readLine();
+            
+            while(linea != null){
+                String[] datos = linea.split(",");
+                idActual = Integer.parseInt(datos[0]);
+                
+                if(idActual > idMayor){
+                    idMayor = idActual;
+                }
+                linea = br.readLine();
+            }
+            br.close();
+        }catch(IOException e){
+            idMayor = 0;
+        }
+            int Idnuevo = idMayor + 1;
+            return String.valueOf(Idnuevo);
+    }
   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnBuscarCliente;
     private javax.swing.JButton BtnBuscarUsuario;
+    private javax.swing.JButton BtnNuevoCliente;
+    private javax.swing.JButton BtnNuevoUsuario;
     private javax.swing.JTable TblClientes;
     private javax.swing.JTable TblUsuarios;
     private javax.swing.JTextField TxtBuscarCliente;
     private javax.swing.JTextField TxtBuscarUsuario;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

@@ -1,1 +1,3 @@
-1,Juan Perez,45879562,juanchas@gmail.com,admin,cancha2026,ADMINISTRADOR
+1, Juan Pérez,45678912,juanPe@gmail.com,admin,cancha2026,ADMINISTRADOR
+2,Marta Paz,12345678,maraPaz@gmail.com,admin,mara1234,ADMINISTRADOR
+3,Carlos Puerro,123478569,carlpuerro@gmail.com,Puerro,puerro1,ADMINISTRADOR

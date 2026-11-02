@@ -106,7 +106,7 @@
                   <Component id="LblSalida" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="CmbSalida" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="50" max="32767" attributes="0"/>
+              <EmptySpace pref="49" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="LblTotal" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="TxtTotal" alignment="3" min="-2" max="-2" attributes="0"/>

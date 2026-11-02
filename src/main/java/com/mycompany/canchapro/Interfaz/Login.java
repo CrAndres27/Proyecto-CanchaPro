@@ -174,7 +174,7 @@ public class Login extends javax.swing.JFrame {
          linea = br.readLine();
          while (linea !=null){
          String[] datos = linea.split(",");
-            if (Usuario.equals((datos[1])) && Contra.equals(datos[2]))
+            if (Usuario.equals((datos[5])) && Contra.equals(datos[6]))
                 Valido = true;
                 linea = br.readLine();
                 break;
