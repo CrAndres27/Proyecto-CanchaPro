@@ -60,6 +60,7 @@ public class Tienda extends javax.swing.JPanel {
         BtnPagar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         TblProductos = new javax.swing.JTable();
+        BtnAgregarStock = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(978, 578));
 
@@ -201,6 +202,10 @@ public class Tienda extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(TblProductos);
 
+        BtnAgregarStock.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnAgregarStock.setText("Agregar Stock");
+        BtnAgregarStock.addActionListener(this::BtnAgregarStockActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -213,7 +218,10 @@ public class Tienda extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(102, 102, 102)
+                                .addComponent(BtnAgregarStock))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 939, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
@@ -222,10 +230,15 @@ public class Tienda extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(38, 38, 38)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(115, 115, 115)
+                        .addComponent(BtnAgregarStock)))
                 .addContainerGap(103, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -464,6 +477,12 @@ public class Tienda extends javax.swing.JPanel {
             JOptionPane.showConfirmDialog(this, "error "+e.getMessage());
         }
     }//GEN-LAST:event_BtnPagarActionPerformed
+
+    private void BtnAgregarStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarStockActionPerformed
+        AgregarStock Ags = new AgregarStock();
+        Ags.setLocationRelativeTo(null);
+        Ags.setVisible(true);
+    }//GEN-LAST:event_BtnAgregarStockActionPerformed
     
     public void CargarClientes(String coincidencia){
         CmbClientes.removeAllItems();
@@ -549,6 +568,7 @@ public class Tienda extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAgregar;
+    private javax.swing.JButton BtnAgregarStock;
     private javax.swing.JButton BtnBuscarCliente;
     private javax.swing.JButton BtnBuscarProducto;
     private javax.swing.JButton BtnPagar;
