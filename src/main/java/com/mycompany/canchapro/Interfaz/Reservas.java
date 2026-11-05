@@ -74,6 +74,7 @@ public class Reservas extends javax.swing.JPanel {
             TablaReservas.getColumnModel().getColumn(7).setResizable(false);
         }
 
+        BtReserva.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         BtReserva.setText("Realizar Reserva");
         BtReserva.addActionListener(this::BtReservaActionPerformed);
 
@@ -115,7 +116,7 @@ public class Reservas extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(BtReserva)
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

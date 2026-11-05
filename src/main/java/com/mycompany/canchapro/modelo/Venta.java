@@ -11,7 +11,7 @@ public class Venta {
     private DetalleVenta [] detalle = new DetalleVenta[100];
     private int cont_detalle;
 
-    public Venta(int cod_venta, LocalDateTime fecha_hora, double total, MetodoPago metodo, int cont_detalle) {
+    public Venta(int cod_venta, LocalDateTime fecha_hora, Reserva reserva ,double total, MetodoPago metodo, int cont_detalle) {
         this.cod_venta = cod_venta;
         this.fecha_hora = fecha_hora;
         this.total = total;
@@ -67,6 +67,15 @@ public class Venta {
         this.cont_detalle = cont_detalle;
     }
     
-    
+    public double calcularTotal(){
+        double suma = 0.0;
+        for(int i = 0; i < this.cont_detalle; i++){
+            if(this.detalle[i] !=null){
+                suma = suma + this.detalle[i].getSubtotal();
+            }
+        }
+        this.total = suma;
+        return this.total;
+    }
     
 }

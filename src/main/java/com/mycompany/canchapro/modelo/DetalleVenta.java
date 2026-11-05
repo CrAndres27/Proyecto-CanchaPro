@@ -4,12 +4,14 @@ package com.mycompany.canchapro.modelo;
 
 public class DetalleVenta {
     private int cod_detalle;
+    private Producto producto;
     private int cantidad;
     private double precio;
     private double subtotal;
 
-    public DetalleVenta(int cod_detalle, int cantidad, double precio, double subtotal) {
+    public DetalleVenta(int cod_detalle, Producto producto ,int cantidad, double precio, double subtotal) {
         this.cod_detalle = cod_detalle;
+        this.producto = producto;
         this.cantidad = cantidad;
         this.precio = precio;
         this.subtotal = subtotal;
@@ -23,12 +25,21 @@ public class DetalleVenta {
         this.cod_detalle = cod_detalle;
     }
 
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
     public int getCantidad() {
         return cantidad;
     }
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+        calcularSubtotal();
     }
 
     public double getPrecio() {
@@ -47,6 +58,9 @@ public class DetalleVenta {
         this.subtotal = subtotal;
     }
     
-    
+    public double calcularSubtotal(){
+        this.subtotal = this.cantidad * this.precio;
+        return this.subtotal;
+    }
     
 }

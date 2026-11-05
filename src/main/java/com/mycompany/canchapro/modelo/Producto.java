@@ -78,7 +78,17 @@ public class Producto {
         this.estado = estado;
     }
     
-    
+    public boolean descontarStock(int cantidad) {
+        if (this.existencia >=cantidad) {
+            this.existencia = this.existencia - cantidad;
+            return true;
+        }
+        return false;
+    }
+
+    public void agregarStock(int cantidad) {
+        this.existencia = this.existencia + cantidad;
+    }
             
     
 }

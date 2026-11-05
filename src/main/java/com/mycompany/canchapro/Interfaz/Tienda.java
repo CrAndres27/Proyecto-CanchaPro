@@ -4,6 +4,18 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.DetalleVenta;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Set;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Cristian
@@ -15,6 +27,9 @@ public class Tienda extends javax.swing.JPanel {
      */
     public Tienda() {
         initComponents();
+        
+        CargarClientes("");
+        CargarProductos("");
     }
 
     /**
@@ -27,32 +42,534 @@ public class Tienda extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        BtnAgregar = new javax.swing.JButton();
+        CmbProductos = new javax.swing.JComboBox<>();
+        TxtCantidad = new javax.swing.JTextField();
+        TxtProducto = new javax.swing.JTextField();
+        BtnBuscarProducto = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        CmbClientes = new javax.swing.JComboBox<>();
+        TxtCliente = new javax.swing.JTextField();
+        BtnBuscarCliente = new javax.swing.JButton();
+        TxtTotal = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        CmbMetodoPago = new javax.swing.JComboBox<>();
+        BtnPagar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TblProductos = new javax.swing.JTable();
 
         setPreferredSize(new java.awt.Dimension(978, 578));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("TIENDA");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Producto");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setText("Cantidad");
+
+        BtnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnAgregar.setText("Agregar Producto");
+        BtnAgregar.addActionListener(this::BtnAgregarActionPerformed);
+
+        CmbProductos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        TxtCantidad.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        TxtProducto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        BtnBuscarProducto.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnBuscarProducto.setText("Buscar");
+        BtnBuscarProducto.addActionListener(this::BtnBuscarProductoActionPerformed);
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setText("Cliente");
+
+        CmbClientes.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        CmbClientes.addActionListener(this::CmbClientesActionPerformed);
+
+        TxtCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
+        BtnBuscarCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnBuscarCliente.setText("Buscar");
+        BtnBuscarCliente.addActionListener(this::BtnBuscarClienteActionPerformed);
+
+        TxtTotal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TxtTotal.setEnabled(false);
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText("Total");
+
+        CmbMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "EFECTIVO", "TARJETA", "TRANSFERENCIA" }));
+
+        BtnPagar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnPagar.setText("Pagar");
+        BtnPagar.addActionListener(this::BtnPagarActionPerformed);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TxtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(CmbMetodoPago, 0, 127, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(TxtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnBuscarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(CmbClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(60, 60, 60)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(CmbProductos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(TxtCantidad))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BtnBuscarProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(117, 117, 117)
+                .addComponent(BtnPagar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(BtnAgregar)
+                .addGap(58, 58, 58))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(TxtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BtnBuscarProducto)
+                            .addComponent(TxtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BtnBuscarCliente))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(CmbProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(CmbClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(TxtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(TxtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(CmbMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BtnPagar)
+                    .addComponent(BtnAgregar))
+                .addContainerGap(37, Short.MAX_VALUE))
+        );
+
+        TblProductos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        TblProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Cod", "Nombre", "Cantidad", "Precio", "Subtotal"
+            }
+        ));
+        jScrollPane1.setViewportView(TblProductos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(380, 380, 380)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(435, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(430, 430, 430)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 939, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(203, 203, 203)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(276, Short.MAX_VALUE))
+                .addGap(23, 23, 23)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(103, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void BtnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarActionPerformed
+       String cantidad = TxtCantidad.getText().trim();
+
+    if (CmbProductos.getSelectedItem() == null || cantidad.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Faltan campos por llenar");
+        return;
+    }
+    try{
+        int cantProducto = Integer.parseInt(cantidad);
+        if (cantProducto <= 0) {
+            JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a 0");
+            return;
+        }
+
+        String producto = CmbProductos.getSelectedItem().toString();
+        String[] datos = producto.split(" - ");
+        int cod = 0;
+        String nombre = datos[0].trim();
+        double precio = Double.parseDouble(datos[1].replace("Q", "").trim());
+        int stock = 0;
+        
+        FileReader fr = new FileReader("datos/productos.txt");
+        BufferedReader br = new BufferedReader(fr);
+        String linea = br.readLine();
+
+        while (linea != null) {
+            if (!linea.trim().isEmpty()) {
+                String[] infoArchivo = linea.split(",");
+                if (infoArchivo.length >= 5 && infoArchivo[1].trim().equalsIgnoreCase(nombre)) {
+                    cod = Integer.parseInt(infoArchivo[0].trim());
+                    stock = Integer.parseInt(infoArchivo[4].trim());
+                    break;
+                }
+            }
+            linea = br.readLine();
+        }
+        br.close();
+        fr.close();
+        
+        if (cantProducto > stock) {
+            JOptionPane.showMessageDialog(this, "Stock insuficiente");
+            return;
+        }
+
+        DetalleVenta detalle = new DetalleVenta(0,null ,cantProducto, precio,0.0);
+        double subtotal = detalle.calcularSubtotal();
+
+        DefaultTableModel modelo = (DefaultTableModel) TblProductos.getModel();
+        boolean yaExiste = false;
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            int codTabla = Integer.parseInt(modelo.getValueAt(i, 0).toString().trim());
+            
+            if (codTabla == cod) {
+                int cantActual = Integer.parseInt(modelo.getValueAt(i, 2).toString().trim());
+                int nuevaCant = cantActual + cantProducto;
+
+                if (nuevaCant > stock) {
+                    JOptionPane.showMessageDialog(this, "Stock insuficiente");
+                    return;
+                }
+
+                detalle.setCantidad(nuevaCant);
+                double nuevoSubtotal = detalle.getSubtotal();
+
+                modelo.setValueAt(nuevaCant, i, 2);
+                modelo.setValueAt(String.format("%.2f", nuevoSubtotal), i, 4);
+                yaExiste = true;
+                break;
+        }
+        }
+        if (!yaExiste) {
+            modelo.addRow(new Object[]{
+                cod, 
+                nombre, 
+                cantProducto, 
+                String.format("%.2f", precio), 
+                String.format("%.2f", subtotal)
+                });
+            }
+        double totalVenta = 0.0;
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            Object valSubtotal = modelo.getValueAt(i, 4); 
+            if (valSubtotal != null) {
+                String textoSubtotal = valSubtotal.toString().replace("Q", "").trim();
+                if (!textoSubtotal.isEmpty()) {
+                    totalVenta += Double.parseDouble(textoSubtotal);
+                }
+            }
+        }
+        TxtTotal.setText(String.format("%.2f", totalVenta));
+        TxtCantidad.setText("");
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Ingrese una cantidad válida" + e.getMessage());
+        } catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Error "+ e.getMessage());
+        }
+    }//GEN-LAST:event_BtnAgregarActionPerformed
+
+    private void CmbClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CmbClientesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CmbClientesActionPerformed
+
+    private void BtnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarClienteActionPerformed
+        String coincidencia = TxtCliente.getText();
+        CargarClientes(coincidencia);
+    }//GEN-LAST:event_BtnBuscarClienteActionPerformed
+
+    private void BtnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarProductoActionPerformed
+        String coincidencia = TxtProducto.getText();
+        CargarProductos(coincidencia);
+    }//GEN-LAST:event_BtnBuscarProductoActionPerformed
+
+    private void BtnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPagarActionPerformed
+        DefaultTableModel modelo = (DefaultTableModel) TblProductos.getModel();
+        
+        if(modelo.getRowCount() ==0){
+            JOptionPane.showMessageDialog(this, "No hay productos");
+            return;
+        }
+        if(CmbClientes.getSelectedItem() == null){
+        JOptionPane.showMessageDialog(this, "Seleccione un cliente");
+        return;
+        }
+        
+        try{
+            String clienteSel = CmbClientes.getSelectedItem().toString();
+            int codCliente = Integer.parseInt(clienteSel.split(" - ")[0]);
+            String total = TxtTotal.getText();
+            double totalVenta = Double.parseDouble(total);
+            String metodoPago = CmbMetodoPago.getSelectedItem().toString();
+            String fechaActual = LocalDateTime.now().format(
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            );
+            int numVenta = 1;
+            FileReader fr1 = new FileReader("datos/ventas.txt");
+            BufferedReader br1 = new BufferedReader(fr1);
+            
+            String linea;
+            linea = br1.readLine();
+            while(linea !=null){
+                if(!linea.isEmpty()){
+                String[] datos = linea.split(",");
+                numVenta = Integer.parseInt(datos[0])+1;
+                }
+                linea = br1.readLine();
+            }
+            br1.close();
+            
+            FileWriter fw = new FileWriter("datos/ventas.txt",true);
+            PrintWriter pw = new PrintWriter(fw);
+            pw.println(numVenta+","+codCliente+","+fechaActual+","+String.format("%.2f", totalVenta)+","+metodoPago);
+            pw.close();
+            
+            int numDetalle = 1;
+            FileReader fr2 = new FileReader("datos/detalleventa.txt");
+            BufferedReader br2 = new BufferedReader(fr2);
+            
+            linea = br2.readLine();
+            while(linea !=null){
+                if(!linea.isEmpty()){
+                String[] datos = linea.split(",");
+                numDetalle = Integer.parseInt(datos[0])+1;
+                }
+                linea = br2.readLine();
+            }
+            br2.close();
+            
+            int totalProductos = 0;
+            FileReader fr3 = new FileReader("datos/productos.txt");
+            BufferedReader br3 = new BufferedReader(fr3);
+            while(br3.readLine()!= null){
+                totalProductos++;
+            }
+            br3.close();   
+            
+            String[] listaproductos = new String[totalProductos];
+            FileReader fr4 = new FileReader("datos/productos.txt");            
+            BufferedReader br4 = new BufferedReader(fr4);
+            int posicion = 0;
+            
+            linea = br4.readLine();
+            while(linea !=null){
+                listaproductos[posicion] = linea;
+                posicion++;
+                linea =br4.readLine();
+            }
+            br4.close();
+            
+            FileWriter fw2 = new FileWriter("datos/detalleventa.txt",true);
+            PrintWriter pw2 = new PrintWriter(fw2);
+            
+            for(int i=0; i<modelo.getRowCount();i++){
+                int codProducto = Integer.parseInt(modelo.getValueAt(i, 0).toString());
+                int cantidad = Integer.parseInt(modelo.getValueAt(i, 2).toString());
+                double precio = Double.parseDouble(modelo.getValueAt(i,3).toString());
+                double subtotal = Double.parseDouble(modelo.getValueAt(i, 4).toString());
+                
+                pw2.println(numDetalle + "," + numVenta + "," + codProducto + "," + cantidad + "," + String.format("%.2f", precio) + "," + String.format("%.2f", subtotal));
+                numDetalle++;
+            
+            for(int j = 0; j<listaproductos.length; j++){
+                if(listaproductos[j] !=null){
+                    String[] datosProductos = listaproductos[j].split(",");
+                    if(Integer.parseInt(datosProductos[0]) == codProducto){
+                    int stockActual = Integer.parseInt(datosProductos[4]);
+                    int nuevostock = stockActual - cantidad;
+                    datosProductos[4] = String.valueOf(nuevostock);
+                    listaproductos[j] = String.join(",", datosProductos);
+                    break;
+                    }
+                }
+            }
+        }
+            pw2.close();
+            
+            FileWriter fw3 = new FileWriter("datos/productos.txt",false);
+            PrintWriter pw3 = new PrintWriter(fw3);
+            for(int k = 0; k<listaproductos.length; k++){
+            if(listaproductos[k]!= null){
+                pw3.println(listaproductos[k]);
+                }
+            }
+            pw3.close();
+            
+            JOptionPane.showMessageDialog(this, "Venta Realizada");
+            modelo.setRowCount(0);
+            TxtTotal.setText("");
+            TxtCantidad.setText("");
+        }catch(Exception e){
+            JOptionPane.showConfirmDialog(this, "error "+e.getMessage());
+        }
+    }//GEN-LAST:event_BtnPagarActionPerformed
+    
+    public void CargarClientes(String coincidencia){
+        CmbClientes.removeAllItems();
+        try{
+            FileReader fr = new FileReader("datos/clientes.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String linea;
+            
+            linea = br.readLine();
+            while(linea !=null){
+                String[] datos = linea.split(",");
+                
+            if(datos.length >=2){
+               String cod = datos[0];
+               String nombre = datos[1];
+               
+               if(coincidencia.isEmpty() || nombre.contains(coincidencia)){
+                    CmbClientes.addItem(cod+" - "+nombre);
+                    }
+                }
+            linea = br.readLine();
+            }
+            br.close();
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this,"Error al cargar los clientes" + e.getMessage());
+        }
+    }
+    
+    public void CargarProductos(String coincidencia){
+        CmbProductos.removeAllItems();
+        try{
+            FileReader fr = new FileReader("datos/productos.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String linea;
+            
+            linea = br.readLine();
+            while(linea !=null){
+                String[] datos = linea.split(",");
+                
+            if(datos.length >=2){
+               String nombre = datos[1];
+               String precio = datos[3];
+               
+               if(coincidencia.isEmpty()|| nombre.contains(coincidencia)){
+                   CmbProductos.addItem(nombre+ " - Q"+ precio);
+               }
+                }
+            linea = br.readLine();
+            }
+            br.close();
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this,"Error al cargar los clientes" + e.getMessage());
+        }
+    }
+    
+    public String ObtenerCodigo(String rutaArchivo){
+        int idMayor = 0;
+        int idActual;
+        
+        try{
+            FileReader fr = new FileReader(rutaArchivo);
+            BufferedReader br = new BufferedReader(fr);
+            
+            String linea;
+            linea = br.readLine();
+            
+            while(linea != null){
+                String[] datos = linea.split(",");
+                idActual = Integer.parseInt(datos[0]);
+                
+                if(idActual > idMayor){
+                    idMayor = idActual;
+                }
+                linea = br.readLine();
+            }
+            br.close();
+        }catch(IOException e){
+            idMayor = 0;
+        }
+            int Idnuevo = idMayor + 1;
+            return String.valueOf(Idnuevo);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnAgregar;
+    private javax.swing.JButton BtnBuscarCliente;
+    private javax.swing.JButton BtnBuscarProducto;
+    private javax.swing.JButton BtnPagar;
+    private javax.swing.JComboBox<String> CmbClientes;
+    private javax.swing.JComboBox<String> CmbMetodoPago;
+    private javax.swing.JComboBox<String> CmbProductos;
+    private javax.swing.JTable TblProductos;
+    private javax.swing.JTextField TxtCantidad;
+    private javax.swing.JTextField TxtCliente;
+    private javax.swing.JTextField TxtProducto;
+    private javax.swing.JTextField TxtTotal;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    private void CalcularTotal() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
