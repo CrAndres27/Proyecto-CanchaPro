@@ -203,7 +203,7 @@ public class Tienda extends javax.swing.JPanel {
         jScrollPane1.setViewportView(TblProductos);
 
         BtnAgregarStock.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        BtnAgregarStock.setText("Agregar Stock");
+        BtnAgregarStock.setText("Ver Productos");
         BtnAgregarStock.addActionListener(this::BtnAgregarStockActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -220,7 +220,7 @@ public class Tienda extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(102, 102, 102)
+                                .addGap(94, 94, 94)
                                 .addComponent(BtnAgregarStock))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 939, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(20, Short.MAX_VALUE))
@@ -237,7 +237,7 @@ public class Tienda extends javax.swing.JPanel {
                         .addGap(38, 38, 38)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(115, 115, 115)
+                        .addGap(131, 131, 131)
                         .addComponent(BtnAgregarStock)))
                 .addContainerGap(103, Short.MAX_VALUE))
         );

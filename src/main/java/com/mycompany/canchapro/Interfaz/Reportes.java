@@ -4,6 +4,11 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Cristian
@@ -26,31 +31,430 @@ public class Reportes extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        CmbReporte = new javax.swing.JComboBox<>();
+        TxtFechaInicio = new javax.swing.JTextField();
+        TxtFechaFin = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        BtnGenerar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TblReportes = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        LblResumen = new javax.swing.JLabel();
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel1.setText("reporte");
+        CmbReporte.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        CmbReporte.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Reserva por Fecha", "Ingresos por periodo", "Cancha mas utilizada", "Clientes con mayor cantidad de reservas", "Pagos Pendientes" }));
+
+        TxtFechaInicio.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
+        TxtFechaFin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setText("Fecha Inicial");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Fecha Final");
+
+        BtnGenerar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnGenerar.setText("Generar");
+        BtnGenerar.addActionListener(this::BtnGenerarActionPerformed);
+
+        TblReportes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(TblReportes);
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setText("Resumen");
+
+        LblResumen.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(428, 428, 428)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(457, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(36, 36, 36)
+                                .addComponent(LblResumen, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(BtnGenerar))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(CmbReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(53, 53, 53)
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(TxtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(50, 50, 50)
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(TxtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 925, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 27, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addComponent(jLabel1)
-                .addContainerGap(489, Short.MAX_VALUE))
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CmbReporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(TxtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(TxtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(BtnGenerar)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(LblResumen, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
+    private void BtnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGenerarActionPerformed
+        if(CmbReporte.getSelectedItem() ==null){
+            JOptionPane.showMessageDialog(this, "Seleccione un tipo de reporte");
+        }
+        
+        String opcion = CmbReporte.getSelectedItem().toString();
+        
+        switch(opcion){
+            case "Reserva por Fecha":
+                  reservaFecha();
+                  break;
+            case "Ingresos por periodo":
+                  IngresosPeriodo();
+                  break;
+            case "Cancha mas utilizada":
+                  canchaUtilizada();
+                  break;
+            case "Clientes con mayor cantidad de reservas":
+                masReservas();
+                break;
+            case "Pagos Pendientes":
+                pagosPendientes();
+                break;
+        }
+    }//GEN-LAST:event_BtnGenerarActionPerformed
+    public void reservaFecha(){
+        String fechainicio = TxtFechaInicio.getText();
+        String fechafin = TxtFechaFin.getText();
+        
+        if(fechainicio.isEmpty() || fechafin.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Debe ingresar las dos fechas");
+        }
+        
+       DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("ID");
+        modelo.addColumn("Cliente");
+        modelo.addColumn("Cancha");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Horario");
+        modelo.addColumn("Monto");
+        modelo.addColumn("Estado"); 
+        int totalReserva = 0;
+        
+        try{
+           FileReader fr = new FileReader("datos/reservas.txt");
+           BufferedReader br = new BufferedReader(fr);
+           String linea;
+           
+           linea = br.readLine();
+           while(linea !=null){
+               String[] datos = linea.split(",");
+               if(datos.length>=10){
+               String fechaReserva = datos[4].trim();
+               
+               if(fechaReserva.compareTo(fechainicio)>=0&& fechaReserva.compareTo(fechafin)<=0){
+                   String idReserva = datos[0];
+                   String cliente = datos[2].trim();
+                   String cancha = datos[3].trim();
+                   String horario = datos[5].trim() + " - " + datos[6].trim();
+                   double monto = Double.parseDouble(datos[7].trim());
+                   String estado = datos[9].trim(); 
+                   
+                   modelo.addRow(new Object[]{
+                   idReserva,
+                   cliente,
+                   cancha,
+                   fechaReserva,
+                   horario,
+                   "Q"+String.format("%.2f", monto),
+                    estado
+                   });
+                   totalReserva = totalReserva+1;
+                }
+               }
+               linea = br.readLine();
+           }
+           br.close();
+           
+           TblReportes.setModel(modelo);
+           LblResumen.setText("Total de reservas encontradas: "+totalReserva);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Error "+e.getMessage());
+        }
+    }
+    
+    public void IngresosPeriodo(){
+        String fechainicio = TxtFechaInicio.getText();
+        String fechafin = TxtFechaFin.getText();
+    
+        if(fechainicio.isEmpty() || fechafin.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Debe ingresar las dos fechas");
+        }
+        
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("ID");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Cliente");
+        modelo.addColumn("Monto");
+        double totalacumulado = 0.0;
+        
+        try{
+            FileReader fr = new FileReader("datos/reservas.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String linea;
+            
+            linea = br.readLine();
+            while(linea !=null){
+                String[] datos = linea.split(",");
+                String fechaReserva = datos[4].trim();
+                String estado = datos[9];
+                
+                if(fechaReserva.compareTo(fechainicio)>=0 && fechaReserva.compareTo(fechafin) <=0 && estado.equals("CONFIRMADA")){
+                double monto = Double.parseDouble(datos[7]);
+                totalacumulado = totalacumulado + monto;
+                
+                modelo.addRow(new Object[]{
+                    datos[0], 
+                    fechaReserva,
+                    datos[2],
+                    String.format("%.2f", monto)
+                    });
+                }
+                linea = br.readLine();
+            }
+            br.close();
+            
+            TblReportes.setModel(modelo);
+            LblResumen.setText("Total de ingresos en el periodo: Q"+String.format("%.2f", totalacumulado));
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
+        }  
+    }
+    
+    public void canchaUtilizada(){
+        try{
+            int totalcanchas = 0;
+            FileReader fr1 = new FileReader("datos/canchas.txt");
+            BufferedReader br1 = new BufferedReader(fr1);
+            while(br1.readLine() !=null){
+            totalcanchas ++;
+            }
+            br1.close();
+            
+            String[]listacanchas = new String[totalcanchas];
+            int[] Reservas = new  int[totalcanchas];
+            
+            FileReader fr2 = new FileReader("datos/canchas.txt");
+            BufferedReader br2 = new BufferedReader(fr2);
+            String linea;
+            int posicion = 0;
+            
+            linea = br2.readLine();
+            while(linea !=null){
+                String[] datos = linea.split(",");
+                if(datos.length >2){
+                listacanchas[posicion] = datos[1];
+                Reservas[posicion] = 0;
+                posicion ++;
+                } 
+                linea = br2.readLine();
+            }    
+            br2.close();
+                
+                
+              FileReader fr3 = new FileReader("datos/reservas.txt");
+              BufferedReader br3 = new BufferedReader(fr3);
+              
+              linea = br3.readLine();
+              while(linea != null){
+                  String[ ]datos = linea.split((","));
+                  String canchaReservada = datos[3];
+                  
+                  if(datos.length>3){
+                  for(int i=0;i<listacanchas.length;i++){
+                      Reservas[i]++;
+                      break;
+                    }
+                  }
+                  linea = br3.readLine();
+              } 
+              br3.close();
+              
+              int reservasHechas = -1;
+              String masUtilizada = "Ninguna";
+              
+              DefaultTableModel modelo = new DefaultTableModel();
+              modelo.addColumn("Cancha");
+              modelo.addColumn("Total Reservas");
+              
+              for(int i=0; i<listacanchas.length;i++){
+                  if(listacanchas[i] !=null){
+                  modelo.addRow(new Object[]{
+                      listacanchas[i],
+                      Reservas[i]
+                  });
+                  if(Reservas[i]>reservasHechas){
+                    reservasHechas = Reservas[i];
+                    masUtilizada = listacanchas[i];
+                    }
+                  }
+              }
+              TblReportes.setModel(modelo);
+              LblResumen.setText("La cancha mas utilizada es: "+masUtilizada+" con "+reservasHechas+ " reservas");
+        }catch(Exception e){
+        JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
+        }
+    }
+    
+    public void masReservas(){
+        try{
+            String[] clientes = new String[100];
+            int[] contador = new int[100];
+            int cantClientes = 0;
+            
+            FileReader fr = new FileReader("datos/reservas.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String linea;
+            
+            linea = br.readLine();
+            while(linea !=null){
+                String[] datos = linea.split(",");
+                if(datos.length>=10){
+                    String nombre = datos[2];
+                    String estado = datos[9];
+                    
+                    if(!estado.equals("CANCELADA")){
+                    boolean yaExiste = false;
+                    
+                    for(int i = 0;i<cantClientes;i++){
+                        if(clientes[i].equals(nombre)){
+                        contador[i] = contador[i] + 1;
+                        yaExiste=true;
+                        break;
+                        }
+                      }
+                     if(yaExiste == false){
+                     clientes[cantClientes] = nombre;
+                     contador[cantClientes] = 1;
+                     cantClientes = cantClientes + 1;
+                        }  
+                    }
+                }
+                linea = br.readLine();
+            }
+            br.close();
+            
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("Cliente");
+            modelo.addColumn("Total Reservas");
+            
+            int mayor = -1;
+            String masReservas = "Ninguno";
+            
+            for(int i=0; i<cantClientes; i++){
+                modelo.addRow(new Object[]{
+                clientes[i],
+                contador[i],    
+                });
+            if(contador[i]> mayor){
+                mayor = contador[i];
+                masReservas = clientes[i];
+                }    
+            }
+            TblReportes.setModel(modelo);
+            LblResumen.setText("El clientes con mas reservas: "+masReservas+ " con "+mayor);
+        }catch(Exception e){
+            
+        }
+    }
+    
+    public void pagosPendientes(){
+        try{     
+            DefaultTableModel modelo = new DefaultTableModel();
+            modelo.addColumn("ID Reserva");
+            modelo.addColumn("Cliente");
+            modelo.addColumn("Fecha");
+            modelo.addColumn("Monto Total");
+            modelo.addColumn("Saldo Pendiente");
+            double totalPen = 0.0;
+            
+            FileReader fr = new FileReader("datos/reservas.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String linea;
+            
+            linea = br.readLine();
+            while(linea!=null){
+                String[] datos = linea.split(",");
+                if(datos.length>=10){
+                    String estado = datos[9];
+                    
+                    if(estado.equals("PENDIENTE")){
+                        String idReserva = datos[0];
+                        String cliente = datos[2];
+                        String fecha = datos[4];
+                        double montoTotal = Double.parseDouble(datos[7]);
+                        double saldoPen = Double.parseDouble(datos[8]);
+                        totalPen = totalPen + saldoPen;
+                        
+                        modelo.addRow(new Object[]{
+                        idReserva,
+                        cliente,
+                        fecha,
+                        "Q"+String.format("%.2f", montoTotal),
+                         "Q"+String.format("%.2f", saldoPen)
+                        });
+                    }
+                }
+                linea = br.readLine();
+            }
+            br.close();
+            
+            TblReportes.setModel(modelo);
+            LblResumen.setText("Total de saldo por cobrar: Q"+String.format("%.2f", totalPen));
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
+        }
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnGenerar;
+    private javax.swing.JComboBox<String> CmbReporte;
+    private javax.swing.JLabel LblResumen;
+    private javax.swing.JTable TblReportes;
+    private javax.swing.JTextField TxtFechaFin;
+    private javax.swing.JTextField TxtFechaInicio;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
