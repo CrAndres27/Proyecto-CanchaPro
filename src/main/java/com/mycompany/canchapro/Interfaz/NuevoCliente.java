@@ -4,6 +4,7 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.Cliente;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import javax.swing.JOptionPane;
@@ -122,19 +123,25 @@ public class NuevoCliente extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCrearActionPerformed
-    try {
-        String linea = id+ ","+TxtNombre.getText()+"," +TxtTelefono.getText()+ ","+TxtCorreo.getText()+ "," +fecha;
+        try{
+        int idClient = Integer.parseInt(id);
+        java.time.LocalDate fechaReg = java.time.LocalDate.parse(fecha.trim());
 
-        // 2. Guardar en el archivo
-        FileWriter fw = new FileWriter("datos/clientes.txt", true);
-        PrintWriter pw = new PrintWriter(fw);
-        pw.println(linea);
-        pw.close();
+        Cliente cliente = new Cliente(
+            idClient,
+            TxtNombre.getText().trim(),
+            TxtTelefono.getText().trim(),
+            TxtCorreo.getText().trim(),
+            fechaReg
+        );
 
-        JOptionPane.showMessageDialog(this, "Cliente creado");
-        this.dispose(); 
-
-    } catch (Exception e) {
+        if(cliente.crearCliente()) {
+            JOptionPane.showMessageDialog(this, "Cliente creado");
+            this.dispose();
+        }else {
+            JOptionPane.showMessageDialog(this, "Error al guardar el cliente");
+        }
+    }catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
     }//GEN-LAST:event_BtnCrearActionPerformed

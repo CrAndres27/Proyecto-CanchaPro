@@ -4,7 +4,12 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import static com.mycompany.canchapro.modelo.Cliente.listaClientes;
 import com.mycompany.canchapro.modelo.DetalleVenta;
+import com.mycompany.canchapro.modelo.Producto;
+import static com.mycompany.canchapro.modelo.Producto.generarId;
+import com.mycompany.canchapro.modelo.Venta;
+import com.mycompany.canchapro.modelo.misenums.MetodoPago;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -259,35 +264,26 @@ public class Tienda extends javax.swing.JPanel {
 
         String producto = CmbProductos.getSelectedItem().toString();
         String[] datos = producto.split(" - ");
-        int cod = 0;
-        String nombre = datos[0].trim();
-        double precio = Double.parseDouble(datos[1].replace("Q", "").trim());
-        int stock = 0;
-        
-        FileReader fr = new FileReader("datos/productos.txt");
-        BufferedReader br = new BufferedReader(fr);
-        String linea = br.readLine();
-
-        while (linea != null) {
-            if (!linea.trim().isEmpty()) {
-                String[] infoArchivo = linea.split(",");
-                if (infoArchivo.length >= 5 && infoArchivo[1].trim().equalsIgnoreCase(nombre)) {
-                    cod = Integer.parseInt(infoArchivo[0].trim());
-                    stock = Integer.parseInt(infoArchivo[4].trim());
-                    break;
-                }
-            }
-            linea = br.readLine();
+        String nombre = datos[1].trim();
+        double precio = Double.parseDouble(datos[2].replace("Q", "").replace(",", ".").trim());
+       
+        String[] infoProducto = Producto.buscarProductoNombre(nombre);
+        if (infoProducto == null) {
+            JOptionPane.showMessageDialog(this, "Producto no encontrado en el archivo");
+            return;
         }
-        br.close();
-        fr.close();
-        
+
+        int cod = Integer.parseInt(infoProducto[0]);   
+        int stock = Integer.parseInt(infoProducto[4]); 
+
         if (cantProducto > stock) {
             JOptionPane.showMessageDialog(this, "Stock insuficiente");
             return;
         }
 
         DetalleVenta detalle = new DetalleVenta(0,null ,cantProducto, precio,0.0);
+        detalle.setCantidad(cantProducto);
+        detalle.setPrecio(precio);
         double subtotal = detalle.calcularSubtotal();
 
         DefaultTableModel modelo = (DefaultTableModel) TblProductos.getModel();
@@ -298,7 +294,7 @@ public class Tienda extends javax.swing.JPanel {
             
             if (codTabla == cod) {
                 int cantActual = Integer.parseInt(modelo.getValueAt(i, 2).toString().trim());
-                int nuevaCant = cantActual + cantProducto;
+                int nuevaCant = cantActual + detalle.getCantidad();
 
                 if (nuevaCant > stock) {
                     JOptionPane.showMessageDialog(this, "Stock insuficiente");
@@ -306,34 +302,25 @@ public class Tienda extends javax.swing.JPanel {
                 }
 
                 detalle.setCantidad(nuevaCant);
-                double nuevoSubtotal = detalle.getSubtotal();
+                double nuevoSubtotal = detalle.calcularSubtotal();
 
                 modelo.setValueAt(nuevaCant, i, 2);
-                modelo.setValueAt(String.format("%.2f", nuevoSubtotal), i, 4);
+                modelo.setValueAt(String.format("%.2f", nuevoSubtotal).replace(",", "."), i, 4);
                 yaExiste = true;
                 break;
-        }
+            }
         }
         if (!yaExiste) {
             modelo.addRow(new Object[]{
                 cod, 
                 nombre, 
-                cantProducto, 
+                detalle.getCantidad(), 
                 String.format("%.2f", precio), 
                 String.format("%.2f", subtotal)
                 });
             }
-        double totalVenta = 0.0;
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            Object valSubtotal = modelo.getValueAt(i, 4); 
-            if (valSubtotal != null) {
-                String textoSubtotal = valSubtotal.toString().replace("Q", "").trim();
-                if (!textoSubtotal.isEmpty()) {
-                    totalVenta += Double.parseDouble(textoSubtotal);
-                }
-            }
-        }
-        TxtTotal.setText(String.format("%.2f", totalVenta));
+        double totalVenta = Producto.calcularTotal(modelo);
+        TxtTotal.setText(String.format("%.2f", totalVenta).replace(",", "."));
         TxtCantidad.setText("");
 
         } catch (NumberFormatException e) {
@@ -359,122 +346,57 @@ public class Tienda extends javax.swing.JPanel {
 
     private void BtnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPagarActionPerformed
         DefaultTableModel modelo = (DefaultTableModel) TblProductos.getModel();
-        
-        if(modelo.getRowCount() ==0){
-            JOptionPane.showMessageDialog(this, "No hay productos");
-            return;
-        }
-        if(CmbClientes.getSelectedItem() == null){
+    
+    if (modelo.getRowCount() == 0) {
+        JOptionPane.showMessageDialog(this, "No hay productos");
+        return;
+    }
+    if (CmbClientes.getSelectedItem() == null) {
         JOptionPane.showMessageDialog(this, "Seleccione un cliente");
         return;
+    }
+    
+    try {
+        String clienteSel = CmbClientes.getSelectedItem().toString();
+        int codCliente = Integer.parseInt(clienteSel.split(" - ")[0].trim());
+        String total = TxtTotal.getText().trim();
+        double totalVenta = Double.parseDouble(total);
+        String metodoPago = CmbMetodoPago.getSelectedItem().toString().trim();
+        
+        int numVenta = Producto.generarId("datos/ventas.txt");
+        int numDetalle = Producto.generarId("datos/detalleventa.txt"); 
+        
+        MetodoPago metodoEnum = MetodoPago.valueOf(metodoPago.toUpperCase());
+        Venta venta = new Venta(numVenta, LocalDateTime.now(), null, totalVenta, metodoEnum, modelo.getRowCount());
+        venta.guardarVenta(codCliente);
+        
+        for(int i = 0; i < modelo.getRowCount(); i++) {
+            int codProducto = Integer.parseInt(modelo.getValueAt(i, 0).toString());
+            int cantidad = Integer.parseInt(modelo.getValueAt(i, 2).toString());
+            double precio = Double.parseDouble(modelo.getValueAt(i, 3).toString());
+            double subtotal = Double.parseDouble(modelo.getValueAt(i, 4).toString());
+            
+            String[] datosProd = Producto.buscarProductoCodigo(String.valueOf(codProducto));
+            int existenciaActual = 0;
+            if(datosProd != null && datosProd.length > 4) {
+                existenciaActual = Integer.parseInt(datosProd[4].trim()); 
+            }
+
+            Producto prod = new Producto(codProducto, existenciaActual);
+            DetalleVenta detalle = new DetalleVenta(numDetalle, prod, cantidad, precio, subtotal);
+            
+            detalle.guardardetalleVenta(numVenta);
+            prod.descontarStock(cantidad);
+            
+            numDetalle++;
         }
         
-        try{
-            String clienteSel = CmbClientes.getSelectedItem().toString();
-            int codCliente = Integer.parseInt(clienteSel.split(" - ")[0]);
-            String total = TxtTotal.getText();
-            double totalVenta = Double.parseDouble(total);
-            String metodoPago = CmbMetodoPago.getSelectedItem().toString();
-            String fechaActual = LocalDateTime.now().format(
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-            );
-            int numVenta = 1;
-            FileReader fr1 = new FileReader("datos/ventas.txt");
-            BufferedReader br1 = new BufferedReader(fr1);
-            
-            String linea;
-            linea = br1.readLine();
-            while(linea !=null){
-                if(!linea.isEmpty()){
-                String[] datos = linea.split(",");
-                numVenta = Integer.parseInt(datos[0])+1;
-                }
-                linea = br1.readLine();
-            }
-            br1.close();
-            
-            FileWriter fw = new FileWriter("datos/ventas.txt",true);
-            PrintWriter pw = new PrintWriter(fw);
-            pw.println(numVenta+","+codCliente+","+fechaActual+","+String.format("%.2f", totalVenta)+","+metodoPago);
-            pw.close();
-            
-            int numDetalle = 1;
-            FileReader fr2 = new FileReader("datos/detalleventa.txt");
-            BufferedReader br2 = new BufferedReader(fr2);
-            
-            linea = br2.readLine();
-            while(linea !=null){
-                if(!linea.isEmpty()){
-                String[] datos = linea.split(",");
-                numDetalle = Integer.parseInt(datos[0])+1;
-                }
-                linea = br2.readLine();
-            }
-            br2.close();
-            
-            int totalProductos = 0;
-            FileReader fr3 = new FileReader("datos/productos.txt");
-            BufferedReader br3 = new BufferedReader(fr3);
-            while(br3.readLine()!= null){
-                totalProductos++;
-            }
-            br3.close();   
-            
-            String[] listaproductos = new String[totalProductos];
-            FileReader fr4 = new FileReader("datos/productos.txt");            
-            BufferedReader br4 = new BufferedReader(fr4);
-            int posicion = 0;
-            
-            linea = br4.readLine();
-            while(linea !=null){
-                listaproductos[posicion] = linea;
-                posicion++;
-                linea =br4.readLine();
-            }
-            br4.close();
-            
-            FileWriter fw2 = new FileWriter("datos/detalleventa.txt",true);
-            PrintWriter pw2 = new PrintWriter(fw2);
-            
-            for(int i=0; i<modelo.getRowCount();i++){
-                int codProducto = Integer.parseInt(modelo.getValueAt(i, 0).toString());
-                int cantidad = Integer.parseInt(modelo.getValueAt(i, 2).toString());
-                double precio = Double.parseDouble(modelo.getValueAt(i,3).toString());
-                double subtotal = Double.parseDouble(modelo.getValueAt(i, 4).toString());
-                
-                pw2.println(numDetalle + "," + numVenta + "," + codProducto + "," + cantidad + "," + String.format("%.2f", precio) + "," + String.format("%.2f", subtotal));
-                numDetalle++;
-            
-            for(int j = 0; j<listaproductos.length; j++){
-                if(listaproductos[j] !=null){
-                    String[] datosProductos = listaproductos[j].split(",");
-                    if(Integer.parseInt(datosProductos[0]) == codProducto){
-                    int stockActual = Integer.parseInt(datosProductos[4]);
-                    int nuevostock = stockActual - cantidad;
-                    datosProductos[4] = String.valueOf(nuevostock);
-                    listaproductos[j] = String.join(",", datosProductos);
-                    break;
-                    }
-                }
-            }
-        }
-            pw2.close();
-            
-            FileWriter fw3 = new FileWriter("datos/productos.txt",false);
-            PrintWriter pw3 = new PrintWriter(fw3);
-            for(int k = 0; k<listaproductos.length; k++){
-            if(listaproductos[k]!= null){
-                pw3.println(listaproductos[k]);
-                }
-            }
-            pw3.close();
-            
-            JOptionPane.showMessageDialog(this, "Venta Realizada");
-            modelo.setRowCount(0);
-            TxtTotal.setText("");
-            TxtCantidad.setText("");
-        }catch(Exception e){
-            JOptionPane.showConfirmDialog(this, "error "+e.getMessage());
+        JOptionPane.showMessageDialog(this, "Venta Realizada");
+        modelo.setRowCount(0);
+        TxtTotal.setText("");
+        TxtCantidad.setText("");
+        }catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
     }//GEN-LAST:event_BtnPagarActionPerformed
 
@@ -486,84 +408,18 @@ public class Tienda extends javax.swing.JPanel {
     
     public void CargarClientes(String coincidencia){
         CmbClientes.removeAllItems();
-        try{
-            FileReader fr = new FileReader("datos/clientes.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String linea;
-            
-            linea = br.readLine();
-            while(linea !=null){
-                String[] datos = linea.split(",");
-                
-            if(datos.length >=2){
-               String cod = datos[0];
-               String nombre = datos[1];
-               
-               if(coincidencia.isEmpty() || nombre.contains(coincidencia)){
-                    CmbClientes.addItem(cod+" - "+nombre);
-                    }
-                }
-            linea = br.readLine();
-            }
-            br.close();
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(this,"Error al cargar los clientes" + e.getMessage());
+        String[] clientes = listaClientes(coincidencia);
+        for(int i=0; i< clientes.length; i++){
+            CmbClientes.addItem(clientes[i]);
         }
     }
     
     public void CargarProductos(String coincidencia){
         CmbProductos.removeAllItems();
-        try{
-            FileReader fr = new FileReader("datos/productos.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String linea;
-            
-            linea = br.readLine();
-            while(linea !=null){
-                String[] datos = linea.split(",");
-                
-            if(datos.length >=2){
-               String nombre = datos[1];
-               String precio = datos[3];
-               
-               if(coincidencia.isEmpty()|| nombre.contains(coincidencia)){
-                   CmbProductos.addItem(nombre+ " - Q"+ precio);
-               }
-                }
-            linea = br.readLine();
-            }
-            br.close();
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(this,"Error al cargar los clientes" + e.getMessage());
+        String[] productos = Producto.listaProductos(coincidencia);
+        for(int i=0; i<productos.length; i++){
+            CmbProductos.addItem(productos[i]);
         }
-    }
-    
-    public String ObtenerCodigo(String rutaArchivo){
-        int idMayor = 0;
-        int idActual;
-        
-        try{
-            FileReader fr = new FileReader(rutaArchivo);
-            BufferedReader br = new BufferedReader(fr);
-            
-            String linea;
-            linea = br.readLine();
-            
-            while(linea != null){
-                String[] datos = linea.split(",");
-                idActual = Integer.parseInt(datos[0]);
-                
-                if(idActual > idMayor){
-                    idMayor = idActual;
-                }
-                linea = br.readLine();
-            }
-            br.close();
-        }catch(IOException e){
-            idMayor = 0;
-        }
-            int Idnuevo = idMayor + 1;
-            return String.valueOf(Idnuevo);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -589,7 +445,4 @@ public class Tienda extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    private void CalcularTotal() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

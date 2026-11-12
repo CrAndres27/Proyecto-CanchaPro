@@ -4,6 +4,7 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.Reporte;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import javax.swing.JOptionPane;
@@ -43,7 +44,7 @@ public class Reportes extends javax.swing.JPanel {
         LblResumen = new javax.swing.JLabel();
 
         CmbReporte.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        CmbReporte.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Reserva por Fecha", "Ingresos por periodo", "Cancha mas utilizada", "Clientes con mayor cantidad de reservas", "Pagos Pendientes" }));
+        CmbReporte.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Reserva por Fecha", "Ingresos por periodo", "Cancha mas utilizada", "Clientes con mayor cantidad de reservas", "Pagos Pendientes", "Horarios con Mayor demanda", "Reservas Canceladas" }));
 
         TxtFechaInicio.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
@@ -127,324 +128,69 @@ public class Reportes extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGenerarActionPerformed
-        if(CmbReporte.getSelectedItem() ==null){
-            JOptionPane.showMessageDialog(this, "Seleccione un tipo de reporte");
-        }
-        
-        String opcion = CmbReporte.getSelectedItem().toString();
-        
-        switch(opcion){
-            case "Reserva por Fecha":
-                  reservaFecha();
-                  break;
-            case "Ingresos por periodo":
-                  IngresosPeriodo();
-                  break;
-            case "Cancha mas utilizada":
-                  canchaUtilizada();
-                  break;
-            case "Clientes con mayor cantidad de reservas":
-                masReservas();
-                break;
-            case "Pagos Pendientes":
-                pagosPendientes();
-                break;
-        }
+        if (CmbReporte.getSelectedItem() != null) {
+        String opcionSeleccionada = CmbReporte.getSelectedItem().toString();
+        Reportes(opcionSeleccionada);
+    } else {
+        JOptionPane.showMessageDialog(this, "Seleccione un reporte de la lista.");
+    }
     }//GEN-LAST:event_BtnGenerarActionPerformed
-    public void reservaFecha(){
-        String fechainicio = TxtFechaInicio.getText();
-        String fechafin = TxtFechaFin.getText();
-        
-        if(fechainicio.isEmpty() || fechafin.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Debe ingresar las dos fechas");
-        }
-        
-       DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("ID");
-        modelo.addColumn("Cliente");
-        modelo.addColumn("Cancha");
-        modelo.addColumn("Fecha");
-        modelo.addColumn("Horario");
-        modelo.addColumn("Monto");
-        modelo.addColumn("Estado"); 
-        int totalReserva = 0;
-        
-        try{
-           FileReader fr = new FileReader("datos/reservas.txt");
-           BufferedReader br = new BufferedReader(fr);
-           String linea;
-           
-           linea = br.readLine();
-           while(linea !=null){
-               String[] datos = linea.split(",");
-               if(datos.length>=10){
-               String fechaReserva = datos[4].trim();
-               
-               if(fechaReserva.compareTo(fechainicio)>=0&& fechaReserva.compareTo(fechafin)<=0){
-                   String idReserva = datos[0];
-                   String cliente = datos[2].trim();
-                   String cancha = datos[3].trim();
-                   String horario = datos[5].trim() + " - " + datos[6].trim();
-                   double monto = Double.parseDouble(datos[7].trim());
-                   String estado = datos[9].trim(); 
-                   
-                   modelo.addRow(new Object[]{
-                   idReserva,
-                   cliente,
-                   cancha,
-                   fechaReserva,
-                   horario,
-                   "Q"+String.format("%.2f", monto),
-                    estado
-                   });
-                   totalReserva = totalReserva+1;
-                }
-               }
-               linea = br.readLine();
-           }
-           br.close();
-           
-           TblReportes.setModel(modelo);
-           LblResumen.setText("Total de reservas encontradas: "+totalReserva);
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error "+e.getMessage());
+    
+    private void Reportes(String opcion) {
+    String fechaInicio = TxtFechaInicio.getText().trim();
+    String fechaFin = TxtFechaFin.getText().trim();
+
+    boolean Fechas = false;
+    if (opcion.equals("Reserva por Fecha") || opcion.equals("Ingresos por periodo")) {
+        Fechas = true;
+    }
+
+    if (Fechas) {
+        if (fechaInicio.isEmpty() || fechaFin.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar la fecha de inicio y de fin.");
+            return;
         }
     }
-    
-    public void IngresosPeriodo(){
-        String fechainicio = TxtFechaInicio.getText();
-        String fechafin = TxtFechaFin.getText();
-    
-        if(fechainicio.isEmpty() || fechafin.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Debe ingresar las dos fechas");
-        }
-        
-        DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("ID");
-        modelo.addColumn("Fecha");
-        modelo.addColumn("Cliente");
-        modelo.addColumn("Monto");
-        double totalacumulado = 0.0;
-        
-        try{
-            FileReader fr = new FileReader("datos/reservas.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String linea;
-            
-            linea = br.readLine();
-            while(linea !=null){
-                String[] datos = linea.split(",");
-                String fechaReserva = datos[4].trim();
-                String estado = datos[9];
-                
-                if(fechaReserva.compareTo(fechainicio)>=0 && fechaReserva.compareTo(fechafin) <=0 && estado.equals("CONFIRMADA")){
-                double monto = Double.parseDouble(datos[7]);
-                totalacumulado = totalacumulado + monto;
-                
-                modelo.addRow(new Object[]{
-                    datos[0], 
-                    fechaReserva,
-                    datos[2],
-                    String.format("%.2f", monto)
-                    });
-                }
-                linea = br.readLine();
-            }
-            br.close();
-            
+
+    Object[] resultado = null;
+
+    // Ejecuta el método correspondiente (cambia 'Reserva' por 'Reporte' si creaste una clase aparte)
+    switch (opcion) {
+        case "Reserva por Fecha":
+            resultado = Reporte.reservaFecha(fechaInicio, fechaFin);
+            break;
+        case "Ingresos por periodo":
+            resultado = Reporte.ingresosPeriodo(fechaInicio, fechaFin);
+            break;
+        case "Cancha mas utilizada":
+            resultado = Reporte.canchaMasUtilizada();
+            break;
+        case "Clientes con mayor cantidad de reservas":
+            resultado = Reporte.masReservas();
+            break;
+        case "Pagos Pendientes":
+            resultado = Reporte.pagosPendientes();
+            break;
+        case "Reservas Canceladas":
+            resultado = Reporte.reservasCanceladas();
+            break;
+        case "Horarios con Mayor demanda":
+            resultado = Reporte.horariosDemanda();
+            break;
+        default:
+            JOptionPane.showMessageDialog(this, "Seleccione una opción válida.");
+            return;
+    }
+    if (resultado != null) {
+        if (resultado.length == 2) {
+            DefaultTableModel modelo = (DefaultTableModel) resultado[0];
+            String resumen = (String) resultado[1];
             TblReportes.setModel(modelo);
-            LblResumen.setText("Total de ingresos en el periodo: Q"+String.format("%.2f", totalacumulado));
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
-        }  
-    }
-    
-    public void canchaUtilizada(){
-        try{
-            int totalcanchas = 0;
-            FileReader fr1 = new FileReader("datos/canchas.txt");
-            BufferedReader br1 = new BufferedReader(fr1);
-            while(br1.readLine() !=null){
-            totalcanchas ++;
-            }
-            br1.close();
-            
-            String[]listacanchas = new String[totalcanchas];
-            int[] Reservas = new  int[totalcanchas];
-            
-            FileReader fr2 = new FileReader("datos/canchas.txt");
-            BufferedReader br2 = new BufferedReader(fr2);
-            String linea;
-            int posicion = 0;
-            
-            linea = br2.readLine();
-            while(linea !=null){
-                String[] datos = linea.split(",");
-                if(datos.length >2){
-                listacanchas[posicion] = datos[1];
-                Reservas[posicion] = 0;
-                posicion ++;
-                } 
-                linea = br2.readLine();
-            }    
-            br2.close();
-                
-                
-              FileReader fr3 = new FileReader("datos/reservas.txt");
-              BufferedReader br3 = new BufferedReader(fr3);
-              
-              linea = br3.readLine();
-              while(linea != null){
-                  String[ ]datos = linea.split((","));
-                  String canchaReservada = datos[3];
-                  
-                  if(datos.length>3){
-                  for(int i=0;i<listacanchas.length;i++){
-                      Reservas[i]++;
-                      break;
-                    }
-                  }
-                  linea = br3.readLine();
-              } 
-              br3.close();
-              
-              int reservasHechas = -1;
-              String masUtilizada = "Ninguna";
-              
-              DefaultTableModel modelo = new DefaultTableModel();
-              modelo.addColumn("Cancha");
-              modelo.addColumn("Total Reservas");
-              
-              for(int i=0; i<listacanchas.length;i++){
-                  if(listacanchas[i] !=null){
-                  modelo.addRow(new Object[]{
-                      listacanchas[i],
-                      Reservas[i]
-                  });
-                  if(Reservas[i]>reservasHechas){
-                    reservasHechas = Reservas[i];
-                    masUtilizada = listacanchas[i];
-                    }
-                  }
-              }
-              TblReportes.setModel(modelo);
-              LblResumen.setText("La cancha mas utilizada es: "+masUtilizada+" con "+reservasHechas+ " reservas");
-        }catch(Exception e){
-        JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
+            LblResumen.setText(resumen);
         }
     }
-    
-    public void masReservas(){
-        try{
-            String[] clientes = new String[100];
-            int[] contador = new int[100];
-            int cantClientes = 0;
-            
-            FileReader fr = new FileReader("datos/reservas.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String linea;
-            
-            linea = br.readLine();
-            while(linea !=null){
-                String[] datos = linea.split(",");
-                if(datos.length>=10){
-                    String nombre = datos[2];
-                    String estado = datos[9];
-                    
-                    if(!estado.equals("CANCELADA")){
-                    boolean yaExiste = false;
-                    
-                    for(int i = 0;i<cantClientes;i++){
-                        if(clientes[i].equals(nombre)){
-                        contador[i] = contador[i] + 1;
-                        yaExiste=true;
-                        break;
-                        }
-                      }
-                     if(yaExiste == false){
-                     clientes[cantClientes] = nombre;
-                     contador[cantClientes] = 1;
-                     cantClientes = cantClientes + 1;
-                        }  
-                    }
-                }
-                linea = br.readLine();
-            }
-            br.close();
-            
-            DefaultTableModel modelo = new DefaultTableModel();
-            modelo.addColumn("Cliente");
-            modelo.addColumn("Total Reservas");
-            
-            int mayor = -1;
-            String masReservas = "Ninguno";
-            
-            for(int i=0; i<cantClientes; i++){
-                modelo.addRow(new Object[]{
-                clientes[i],
-                contador[i],    
-                });
-            if(contador[i]> mayor){
-                mayor = contador[i];
-                masReservas = clientes[i];
-                }    
-            }
-            TblReportes.setModel(modelo);
-            LblResumen.setText("El clientes con mas reservas: "+masReservas+ " con "+mayor);
-        }catch(Exception e){
-            
-        }
-    }
-    
-    public void pagosPendientes(){
-        try{     
-            DefaultTableModel modelo = new DefaultTableModel();
-            modelo.addColumn("ID Reserva");
-            modelo.addColumn("Cliente");
-            modelo.addColumn("Fecha");
-            modelo.addColumn("Monto Total");
-            modelo.addColumn("Saldo Pendiente");
-            double totalPen = 0.0;
-            
-            FileReader fr = new FileReader("datos/reservas.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String linea;
-            
-            linea = br.readLine();
-            while(linea!=null){
-                String[] datos = linea.split(",");
-                if(datos.length>=10){
-                    String estado = datos[9];
-                    
-                    if(estado.equals("PENDIENTE")){
-                        String idReserva = datos[0];
-                        String cliente = datos[2];
-                        String fecha = datos[4];
-                        double montoTotal = Double.parseDouble(datos[7]);
-                        double saldoPen = Double.parseDouble(datos[8]);
-                        totalPen = totalPen + saldoPen;
-                        
-                        modelo.addRow(new Object[]{
-                        idReserva,
-                        cliente,
-                        fecha,
-                        "Q"+String.format("%.2f", montoTotal),
-                         "Q"+String.format("%.2f", saldoPen)
-                        });
-                    }
-                }
-                linea = br.readLine();
-            }
-            br.close();
-            
-            TblReportes.setModel(modelo);
-            LblResumen.setText("Total de saldo por cobrar: Q"+String.format("%.2f", totalPen));
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
-        }
-    }
-    
-    
+}
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnGenerar;
     private javax.swing.JComboBox<String> CmbReporte;

@@ -7,12 +7,22 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 public class ServicioAdicional {
+    private int codServicio;
     private String nombre;
     private double precio;
 
-    public ServicioAdicional(String nombre, double precio) {
+    public ServicioAdicional(int codServicio, String nombre, double precio) {
+        this.codServicio = codServicio;
         this.nombre = nombre;
         this.precio = precio;
+    }
+
+    public int getCodServicio() {
+        return codServicio;
+    }
+
+    public void setCodServicio(int codServicio) {
+        this.codServicio = codServicio;
     }
 
     public String getNombre() {

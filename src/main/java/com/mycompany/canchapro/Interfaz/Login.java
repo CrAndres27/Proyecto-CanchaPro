@@ -4,6 +4,7 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.Usuario;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -161,38 +163,23 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_TxtUsuarioActionPerformed
 
     private void BtIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtIngresarActionPerformed
-        String Usuario = TxtUsuario.getText();
-        String Contra = new String(TxtContra.getPassword());
+        String usuario = TxtUsuario.getText();
+        String contra = new String(TxtContra.getPassword());
         
-        boolean Valido = false;
-        
-        try(
-         BufferedReader br = new BufferedReader(new FileReader("datos/usuarios.txt"))){
-        
-         String linea;
-         
-         linea = br.readLine();
-         while (linea !=null){
-         String[] datos = linea.split(",");
-            if (Usuario.equals((datos[5])) && Contra.equals(datos[6]))
-                Valido = true;
-                linea = br.readLine();
-                break;
-         }
-        }catch (IOException e){
-            JOptionPane.showMessageDialog(this,"Error al abrir el archivo");
-            
+        if(usuario.isEmpty() || contra.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Ingrese usuario y contraseña");
+            return;
         }
         
-    if(Valido){
-        MenuPrincipal prp = new MenuPrincipal();
-        prp.setVisible(true);
-        this.dispose();
-    }else{
-        JOptionPane.showMessageDialog(this, "Usuario o Contraseña incorrectos");
-        TxtUsuario.setText("");
-        TxtContra.setText("");
-    }
+        if(Usuario.validarUsuario(usuario, contra)){
+            MenuPrincipal mnu = new MenuPrincipal();
+            mnu.setVisible(true);
+            this.dispose();
+        }else{
+            JOptionPane.showMessageDialog(this, "Usuario o contrasñea incorrectos");
+            TxtUsuario.setText("");
+            TxtContra.setText("");
+        }
     }//GEN-LAST:event_BtIngresarActionPerformed
 
     /**

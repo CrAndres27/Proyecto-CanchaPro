@@ -83,12 +83,14 @@
           <Font name="Segoe UI" size="14" style="1"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="5">
+          <StringArray count="7">
             <StringItem index="0" value="Reserva por Fecha"/>
             <StringItem index="1" value="Ingresos por periodo"/>
             <StringItem index="2" value="Cancha mas utilizada"/>
             <StringItem index="3" value="Clientes con mayor cantidad de reservas"/>
             <StringItem index="4" value="Pagos Pendientes"/>
+            <StringItem index="5" value="Horarios con Mayor demanda"/>
+            <StringItem index="6" value="Reservas Canceladas"/>
           </StringArray>
         </Property>
       </Properties>

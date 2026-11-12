@@ -14,11 +14,11 @@ import com.mycompany.canchapro.Interfaz.MenuPrincipal;
 public class CanchaPro {
 
     public static void main(String[] args) {
-        /*Login prp = new Login();
-        prp.setVisible(true);*/
+        Login prp = new Login();
+        prp.setVisible(true);
         
-        MenuPrincipal principal = new MenuPrincipal();
-        principal.setVisible(true);
+        /*MenuPrincipal principal = new MenuPrincipal();
+        principal.setVisible(true);*/
         
     }
 }

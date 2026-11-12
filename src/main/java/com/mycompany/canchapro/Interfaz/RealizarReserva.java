@@ -6,6 +6,7 @@ package com.mycompany.canchapro.Interfaz;
 
 import com.mycompany.canchapro.modelo.Cancha;
 import com.mycompany.canchapro.modelo.Cliente;
+import com.mycompany.canchapro.modelo.DetalleServicio;
 import com.mycompany.canchapro.modelo.Reserva;
 import static com.mycompany.canchapro.modelo.Reserva.HorarioOcupado;
 import com.mycompany.canchapro.modelo.ServicioAdicional;
@@ -37,7 +38,7 @@ public class RealizarReserva extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         
-        CargarClientes();
+        CargarClientes("");
         
     this.precio = precio;
     this.cancha = cancha;
@@ -46,6 +47,12 @@ public class RealizarReserva extends javax.swing.JDialog {
     TxtCancha.setEditable(false);
     TxtTotal.setText(precio);
     TxtTotal.setEditable(false);
+    
+    if(TxtFecha.getText().isEmpty()){
+        TxtFecha.setText(LocalDate.now().toString());
+    }
+    
+        cargarReserva();
    
     }
 
@@ -328,17 +335,30 @@ public class RealizarReserva extends javax.swing.JDialog {
     }//GEN-LAST:event_CntidadChalecoStateChanged
 
     private void BtPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtPagoActionPerformed
-       if(codReserva > 0){
+       try{
+        if(codReserva > 0){
        TxtAdelanto.setText(TxtTotal.getText());
-       if(Reserva.actualizarEstado(codReserva, EstadoReserva.CONFIRMADA, 0.0)){
+       Reserva reserva = new Reserva(codReserva);
+       if(reserva.actualizarEstado(EstadoReserva.CONFIRMADA, 0.0)){
            JOptionPane.showMessageDialog(this, "Pago y Reserva Confirmada");
            this.dispose();
         }
        return;
        }
-        
+       if(CmbClientes.getSelectedItem() ==null){
+           JOptionPane.showMessageDialog(this, "Seleccione un cliente");
+           return;
+       }
        String cliente = CmbClientes.getSelectedItem().toString();
-       Cliente client = new Cliente(cliente);
+       int idCliente = 0;
+       String Nomclient = cliente;
+       if(cliente.contains("-")){
+           String[] separar = cliente.split("-");
+           idCliente = Integer.parseInt(separar[0].trim());
+           Nomclient = separar[1].trim();
+       }
+       Cliente client = new Cliente(idCliente, Nomclient);
+       
        String cancha = TxtCancha.getText();
        LocalDate fecha = LocalDate.parse(TxtFecha.getText().trim());
        LocalTime horaInicio = LocalTime.parse(CmbHorario.getSelectedItem().toString().trim());
@@ -353,36 +373,37 @@ public class RealizarReserva extends javax.swing.JDialog {
        double saldoPen = 0.0;
        TxtAdelanto.setText(String.valueOf(total));
        
-       int cod = 1;
-       try{
-           FileReader fr = new FileReader("datos/reservas.txt");
-           BufferedReader br = new BufferedReader(fr);
-           String linea = br.readLine();
-           while(linea != null){
-               if(!linea.equals("")){
-                   String[] datos = linea.split(",");
-                   cod = Integer.parseInt(datos[0])+1;
-               }
-               linea = br.readLine();
-           }
-           br.close();
-       }catch(IOException e){
-       }
+       int cod = Reserva.generarId();
+       Cancha canchita = new Cancha("",cancha,null, 0,0.0,null,null,null);
+
+    
        Reserva reserva = new Reserva(
-         cod, client, new Cancha(TxtCancha.getText()), fecha, horaInicio, horaFin,
+         cod, client, canchita, fecha, horaInicio, horaFin,
          total, saldoPen,EstadoReserva.CONFIRMADA,null,null, "Operador 1"
        );
        if(reserva.guardarReserva()){
            JOptionPane.showMessageDialog(this, "Pago y Reserva Confirmada");
            this.dispose();
+       }else{
+           JOptionPane.showMessageDialog(this, "No se guardo la reserva");
        }
-       
+       }catch(Exception e){
+           JOptionPane.showMessageDialog(this, "Error en el pago: "+e.getMessage());
+       } 
     }//GEN-LAST:event_BtPagoActionPerformed
 
     private void BtnGuardarReservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarReservaActionPerformed
        try {
         String cliente = CmbClientes.getSelectedItem().toString();
-        Cliente client = new Cliente(cliente);
+        int idCliente = 0;
+        String nomCliente = cliente;
+        
+        if(cliente.contains("-")){
+            String[] separar = cliente.split("-");
+            idCliente = Integer.parseInt(separar[0].trim());
+            nomCliente = separar[1].trim();
+        }
+        Cliente client = new Cliente(idCliente, nomCliente);
         String cancha = TxtCancha.getText();
         LocalDate fecha = LocalDate.parse(TxtFecha.getText().trim());
         LocalTime horaInicio = LocalTime.parse(CmbHorario.getSelectedItem().toString().trim());
@@ -393,7 +414,17 @@ public class RealizarReserva extends javax.swing.JDialog {
         if (!TxtAdelanto.getText().isEmpty()) {
             adelanto = Double.parseDouble(TxtAdelanto.getText());
         }
-
+        
+        if(adelanto < 0){
+            JOptionPane.showMessageDialog(this, "No puede ingresar una cantidad negativa");
+            return;
+        }
+        
+        if(adelanto > total){
+            JOptionPane.showMessageDialog(this, "El adelanto se pasa del monto a pagar");
+            return;
+        }
+            
         double saldoPen = total - adelanto;
 
         EstadoReserva estado;
@@ -402,42 +433,23 @@ public class RealizarReserva extends javax.swing.JDialog {
         } else {
             estado = EstadoReserva.PENDIENTE;
         }
-
         if (codReserva > 0) {
-            if (Reserva.actualizarEstado(codReserva, estado, saldoPen)) {
+            Reserva reserva = new Reserva(codReserva);
+            if (reserva.actualizarEstado(estado, saldoPen)) {
                 JOptionPane.showMessageDialog(this, "Reserva No: " + codReserva + " actualizada con éxito");
                 this.dispose();
             }
             return; 
         }
-
         if (HorarioOcupado(cancha, fecha, horaInicio, horaFin)) {
             JOptionPane.showMessageDialog(this, "El horario seleccionado ya esta ocupado");
             return;
         }   
-
-        int cod = 1;
-
-        try {
-            FileReader fr = new FileReader("datos/reservas.txt");
-            BufferedReader br = new BufferedReader(fr);
-
-            String linea;
-            linea = br.readLine();
-            while (linea != null) {
-                if (!linea.equals("")) {
-                    String[] datos = linea.split(",");
-                    cod = Integer.parseInt(datos[0]) + 1;
-                }
-                linea = br.readLine();
-            }
-            br.close();
-        } catch (IOException e) {
-        }
-
+        int cod = Reserva.generarId();
+        Cancha canchita = new Cancha("",cancha,null, 0,0.0,null,null,null);
+        
         Reserva reserva = new Reserva(
-            cod, client, new Cancha(TxtCancha.getText()), fecha, horaInicio, 
-            horaFin, total, saldoPen, estado, null, null, "Operador1"
+        cod, client, canchita ,fecha, horaInicio, horaFin, total, saldoPen, estado, null, null, "Operador1"
         );
 
         if (reserva.guardarReserva()) {
@@ -450,9 +462,7 @@ public class RealizarReserva extends javax.swing.JDialog {
     }//GEN-LAST:event_BtnGuardarReservaActionPerformed
 
     private void CmbClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CmbClientesActionPerformed
-        if(CmbClientes.getSelectedItem() != null){
         cargarReserva();
-        }
     }//GEN-LAST:event_CmbClientesActionPerformed
 
     private void BtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCancelarActionPerformed
@@ -473,8 +483,9 @@ public class RealizarReserva extends javax.swing.JDialog {
             }
 
             double saldoPen = total - adelanto;
-
-            if (Reserva.actualizarEstado(codReserva, EstadoReserva.CANCELADA, saldoPen)) {
+            Reserva reserva = new Reserva(codReserva);
+            
+            if (reserva.actualizarEstado(EstadoReserva.CANCELADA, saldoPen)) {
                 JOptionPane.showMessageDialog(this, "Reserva Cancelada");
                 this.dispose();
             } else {
@@ -498,27 +509,11 @@ public class RealizarReserva extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_TxtTotalActionPerformed
 
-    public void CargarClientes(){
-        try{
-            FileReader fr = new FileReader("datos/clientes.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String linea;
-            
-            linea = br.readLine();
-            while(linea !=null){
-                String[] datos = linea.split(",");
-                
-            if(datos.length >=2){
-               String cod = datos[0];
-               String nombre = datos[1];
-               
-               CmbClientes.addItem(cod + " - "+nombre);
-                }
-            linea = br.readLine();
-            }
-            br.close();
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(this,"Error al cargar los clientes" + e.getMessage());
+    public void CargarClientes(String coincidencia){
+        CmbClientes.removeAllItems();
+        String[] clientes = Cliente.listaClientes(coincidencia);
+        for(int i=0; i<clientes.length;i++){
+            CmbClientes.addItem(clientes[i]);
         }
     }
     
@@ -528,9 +523,19 @@ public class RealizarReserva extends javax.swing.JDialog {
         return;
     }    
     String clienteSeleccionado = CmbClientes.getSelectedItem().toString().trim();
+    String cliente = clienteSeleccionado;
+    if(clienteSeleccionado.contains("-")){
+        String[] separacion = clienteSeleccionado.split("-");
+        if(separacion.length>1){
+            cliente = separacion[1].trim();
+        }
+    }
     String canchaActual = TxtCancha.getText();
-    String fechaActual = TxtFecha.getText();
-    Reserva reserva = Reserva.buscarReserva(clienteSeleccionado, canchaActual, fechaActual);
+    
+    if(canchaActual.isEmpty()){
+        return;
+    }
+    Reserva reserva = Reserva.buscarReserva(cliente, canchaActual);
 
         if (reserva != null) {
             this.codReserva = reserva.getCod_reserva();
@@ -538,62 +543,64 @@ public class RealizarReserva extends javax.swing.JDialog {
             TxtFecha.setText(reserva.getFecha().toString());
             CmbHorario.setSelectedItem(reserva.getHora_inicio().toString().trim());
             CmbSalida.setSelectedItem(reserva.getHora_fin().toString().trim());
-        
-            double adelantoInicial = reserva.getTotal() - reserva.getSaldo_pendiente();
-            TxtAdelanto.setText(String.valueOf(adelantoInicial));
-            
-            double resta = reserva.getSaldo_pendiente();
-            TxtTotal.setText(String.valueOf(resta));
 
-            JOptionPane.showMessageDialog(this, "Se cargó la reserva pendiente No: " + codReserva);
+            TxtTotal.setText(String.valueOf(reserva.getSaldo_pendiente()));
+            TxtAdelanto.setText("0.0");
+
+            JOptionPane.showMessageDialog(this, "Se cargó la reserva pendiente No: " + codReserva + " Saldo pendiente: "+ reserva.getSaldo_pendiente());
         } else {
             this.codReserva = 0;
             TxtAdelanto.setText("0.0");
+            calcularTotal();
         }
     }catch(Exception e){
         JOptionPane.showMessageDialog(this, "Error al cargar la reserva: " + e.getMessage());
         }
     }
     
-        public void calcularTotal(){
-            try{
-                if(this.codReserva > 0){
-                    return;
+    public void calcularTotal(){
+        try{
+        if(CmbHorario.getSelectedItem() == null || CmbSalida.getSelectedItem() == null){
+            return;
+           }
+  
+        LocalTime horaInicio = LocalTime.parse(CmbHorario.getSelectedItem().toString().trim());
+        LocalTime horaFin = LocalTime.parse(CmbSalida.getSelectedItem().toString().trim());
+        LocalDate fecha = LocalDate.parse(TxtFecha.getText().trim());
+        int balones = Integer.parseInt(CntidadBalon.getValue().toString());
+        int chalecos = Integer.parseInt(CntidadChaleco.getValue().toString());
+        boolean arbitro = ChkArbitro.isSelected();
+        
+        double total =0.0;
+        
+        if (this.codReserva > 0) {
+            String nomCliente ="";
+            if (CmbClientes.getSelectedItem() != null) {
+                String cliente = CmbClientes.getSelectedItem().toString();
+                if (cliente.contains("-")) {
+                    String[] separar = cliente.split("-");
+                    nomCliente = separar[1];
+                }else{
+                    nomCliente = cliente;
                 }
-                
-                if(CmbHorario.getSelectedItem() == null || CmbSalida.getSelectedItem() == null){
-                return;
             }
             
-            LocalTime horaInicio = LocalTime.parse(CmbHorario.getSelectedItem().toString().trim());
-            LocalTime horaFin = LocalTime.parse(CmbSalida.getSelectedItem().toString().trim());
+            String nomCancha = TxtCancha.getText();
+            Reserva reservaPendiente = Reserva.buscarReserva(nomCliente, nomCancha);
+            double saldoBase = 0.0;
             
-            int hInicio = horaInicio.getHour();
-            int hFin = horaFin.getHour();
-            
-            int horas = hFin - hInicio;
-            
-            if(horas <=0){
-                horas = 1;
+            if (reservaPendiente != null) {
+                saldoBase = reservaPendiente.getSaldo_pendiente();
             }
-            
-            double total = Double.parseDouble(this.precio);
-            total = total * horas;
-            int balones = Integer.parseInt(CntidadBalon.getValue().toString());
-            int chalecos = Integer.parseInt(CntidadChaleco.getValue().toString());
-            
-            double precioBalon = ServicioAdicional.PrecioServicio("BALON");
-            double precioArbitro = ServicioAdicional.PrecioServicio("ARBITRO");
-            double precioChalecos = ServicioAdicional.PrecioServicio("CHALECOS");
-            
-            total = total + (balones*precioBalon);
-            total = total + (chalecos*precioChalecos);
-            
-            if(ChkArbitro.isSelected()){
-                total = total + (precioArbitro*horas);
-            }
-            TxtTotal.setText(String.valueOf(total));
-            }catch(Exception e){
+
+            total = saldoBase + DetalleServicio.calcularServicios(horaInicio, horaFin, balones, chalecos, arbitro);
+        } else {
+            Cancha canchaActual = new Cancha("",TxtCancha.getText().trim(), null, 0, Double.parseDouble(this.precio), null, null, null);
+            total = Reserva.TotalReserva(canchaActual, fecha, horaInicio, horaFin, balones, chalecos, arbitro);
+        }
+        TxtTotal.setText(String.valueOf(total));
+        }catch(Exception e){
+                JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
             }
     }
     /**

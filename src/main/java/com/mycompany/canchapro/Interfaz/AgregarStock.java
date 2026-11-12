@@ -4,6 +4,7 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.Producto;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -156,11 +157,12 @@ public class AgregarStock extends javax.swing.JDialog {
                     .addComponent(TxtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BtnBuscar))
                 .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(TxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(TxtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(TxtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(TxtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -185,45 +187,26 @@ public class AgregarStock extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarActionPerformed
-         String codigobuscado = TxtBuscar.getText();
-         boolean coincidencia = false;
-         
-         if(codigobuscado.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Ingrese el codigo del producto");
-             return;
-         }
-         
-         try{
-         FileReader fr = new FileReader("datos/productos.txt");
-         BufferedReader br = new BufferedReader(fr);
-         String linea;
-         
-         linea = br.readLine();
-         while(linea != null){
-         String[] datos = linea.split(",");
-         if(datos[0].equals(codigobuscado)){
-             TxtCodigo.setText(datos[0]);
-             TxtCodigo.setEditable(false);
-             TxtNombre.setText(datos[1]);
-             TxtCategoria.setText(datos[2]);
-             TxtPrecio.setText(datos[3]);
-             TxtStock.setText(datos[4]);
-             TxtStockminimo.setText(datos[5]);
-             TxtEstado.setText(datos[6]);
-             
-             coincidencia = true;
-             break;
-            }   
-         linea = br.readLine();
-          }
-         br.close();
-         
-         if(!coincidencia){
-         JOptionPane.showMessageDialog(this,"Producto  no encontrado");
-            }
-         }catch(Exception e){
-         JOptionPane.showMessageDialog(this, "Error al buscar "+e.getMessage());
-         }
+         String codigoBuscado = TxtBuscar.getText().trim();
+
+    if (codigoBuscado.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Ingrese el código del producto a buscar.");
+        return;
+    }
+    String[] datos = Producto.buscarProductoCodigo(codigoBuscado);
+
+    if (datos != null && datos.length >= 7) {
+        TxtCodigo.setText(datos[0].trim());
+        TxtCodigo.setEditable(false); 
+        TxtNombre.setText(datos[1].trim());
+        TxtCategoria.setText(datos[2].trim());
+        TxtPrecio.setText(datos[3].trim());
+        TxtStock.setText(datos[4].trim());
+        TxtStockminimo.setText(datos[5].trim());
+        TxtEstado.setText(datos[6].trim());
+        }else {
+        JOptionPane.showMessageDialog(this, "Producto no encontrado.");
+        }
     }//GEN-LAST:event_BtnBuscarActionPerformed
 
     private void TxtStockminimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtStockminimoActionPerformed
@@ -235,66 +218,29 @@ public class AgregarStock extends javax.swing.JDialog {
     }//GEN-LAST:event_TxtEstadoActionPerformed
 
     private void BtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnGuardarActionPerformed
-        String codigo = TxtCodigo.getText(); 
-        
-        try{
-            int totalproductos = 0;
-            FileReader fr1 = new FileReader("datos/productos.txt");
-            BufferedReader br1 = new BufferedReader(fr1);
-            while(br1.readLine() != null){
-            totalproductos ++;
+    String codigo = TxtCodigo.getText().trim();
+
+        if(codigo.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Busque un producto antes de guardar.");
+        return;
         }
-            br1.close();
-            
-            String[] listaproductos = new String[totalproductos];
-            FileReader fr2 = new FileReader("datos/productos.txt");
-            BufferedReader br2 = new BufferedReader(fr2);
-           
-            int posicion = 0;
-            String linea;
-            
-            linea = br2.readLine();
-            while(linea != null){
-            listaproductos[posicion] = linea;
-            posicion++;
-            linea = br2.readLine();
-            }
-            br2.close();
-            
-            boolean guardado = false;
-            for(int i =0; i<listaproductos.length;i++){
-                if(listaproductos[i] != null){
-                    String[] datos = listaproductos[i].split(",");
-                    if(datos[0].equals(codigo)){
-                        datos[1] =TxtNombre.getText();   
-                        datos[3] =TxtPrecio.getText();
-                        datos[4] =TxtStock.getText();
-                        datos[5] =TxtStockminimo.getText();
-                        datos[6] =TxtEstado.getText();
-                        
-                        listaproductos[i] = String.join(",", datos);
-                        guardado = true;
-                        break;
-                    }                    
-                }
-            }
-            
-          if(guardado){
-              FileWriter fw = new FileWriter("datos/productos.txt",false);
-              PrintWriter pw = new PrintWriter(fw);
-               for(int j = 0; j<listaproductos.length;j++){
-                   if(listaproductos[j] !=null){
-                   pw.println(listaproductos[j]);
-                   }
-               }
-               fw.close();
-               JOptionPane.showMessageDialog(this, "Guardado exitosamente");
-          }else{
-              JOptionPane.showMessageDialog(this, "No se encontro el producto");
-          }    
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error "+e.getMessage());
-        }
+
+        boolean exito = Producto.actualizarProducto(
+        codigo,
+        TxtNombre.getText().trim(),
+        TxtCategoria.getText().trim(),
+        TxtPrecio.getText().trim(),
+        TxtStock.getText().trim(),
+        TxtStockminimo.getText().trim(),
+        TxtEstado.getText().trim()
+    );
+
+    if(exito) {
+        JOptionPane.showMessageDialog(this, "¡Producto actualizado exitosamente!");
+        TxtBuscar.setText("");
+    }else {
+        JOptionPane.showMessageDialog(this, "Error al guardar los datos del producto.");
+        }  
     }//GEN-LAST:event_BtnGuardarActionPerformed
 
     /**

@@ -1,7 +1,10 @@
 
 package com.mycompany.canchapro.modelo;
 import com.mycompany.canchapro.modelo.misenums.MetodoPago;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Venta {
     private int cod_venta;
@@ -78,4 +81,18 @@ public class Venta {
         return this.total;
     }
     
+    public void guardarVenta(int codCliente) {
+    try{
+        FileWriter fw = new FileWriter("datos/ventas.txt", true);
+        PrintWriter pw = new PrintWriter(fw);
+        
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd,HH:mm:ss");
+        String nuevaFecha = this.fecha_hora.format(formato);
+        String nuevoTotal = String.format("%.2f", this.total).replace(",", ".");
+
+        pw.println(this.cod_venta + "," + codCliente + "," + nuevaFecha + "," + nuevoTotal + "," + this.metodo);
+    }catch (Exception e) {
+        System.out.println("Error al guardar la venta: " + e.getMessage());
+        }
+    }
 }

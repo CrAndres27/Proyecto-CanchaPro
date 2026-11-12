@@ -4,12 +4,16 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.Cliente;
+import com.mycompany.canchapro.modelo.Usuario;
+import com.mycompany.canchapro.modelo.misenums.RolUsuario;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import javax.swing.JOptionPane;
 
 /**
@@ -211,72 +215,53 @@ public class PanelUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_TxtContraActionPerformed
 
     private void BtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEditarActionPerformed
-        String nuevo = TxtId.getText()+","+TxtNombre.getText()+","+TxtTelefono.getText()+","+TxtCorreo.getText()+","+TxtUsuario.getText()+","+TxtContra.getText()+","+TxtRol.getText();
+        int id = Integer.parseInt(TxtId.getText());
+        String Rol = TxtRol.getText();
+        RolUsuario rol = RolUsuario.valueOf(Rol);
         
-        try{
-            FileReader fr = new FileReader("datos/usuarios.txt");
-            BufferedReader br = new BufferedReader(fr);
-            
-            String nuevaInfo = "";
-            String linea;
-            
-            linea = br.readLine();
-            
-            while(linea!=null){
-                String[]datos = linea.split(",");
-                if(datos[0].equals(id)){
-                    nuevaInfo = nuevaInfo + nuevo + "\n";
-                }else{
-                    nuevaInfo = nuevaInfo + linea+"\n";
-                }
-              linea = br.readLine();
-            }
-            br.close();
-            FileWriter fw = new FileWriter("datos/usuarios.txt");
-            PrintWriter pw = new PrintWriter(fw);
-            pw.print(nuevaInfo);
-            pw.close();
-            
-            JOptionPane.showMessageDialog(this, "Usuario Actualizado");
-        }catch(IOException e){
-            JOptionPane.showMessageDialog(this, "Error al actualizar "+ e.getMessage());
-        }
+        Usuario usuario = new Usuario(
+        id,
+        TxtNombre.getText().trim(),
+        TxtTelefono.getText().trim(),
+        TxtCorreo.getText().trim(),
+        TxtUsuario.getText(),
+        TxtContra.getText(),
+        rol
+    );
+
+    if (usuario.editarUsuario()) {
+        JOptionPane.showMessageDialog(this, "Registro actualizado correctamente.");
+        this.dispose();
+    } else {
+        JOptionPane.showMessageDialog(this, "Error al actualizar el registro.");
+    }
     }//GEN-LAST:event_BtnEditarActionPerformed
 
     private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
-        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Desea eliminar el usuario?");
+      int confirmacion = JOptionPane.showConfirmDialog(this, "¿Está seguro de eliminar este registro?");
+       
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        int id = Integer.parseInt(TxtId.getText());
+        String Rol = TxtRol.getText();
+        RolUsuario rol = RolUsuario.valueOf(Rol);
         
-        if(confirmacion == JOptionPane.YES_OPTION){
-            try{
-                File original = new File("datos/usuarios.txt");
-                File temporal = new File("datos/temp.txt");
-                
-                FileReader fr = new FileReader(original);
-                BufferedReader br = new BufferedReader(fr);
-                FileWriter fw = new FileWriter(temporal);
-                PrintWriter pw = new PrintWriter(fw);
-                
-                String linea;
-                
-                linea =br.readLine();
-                while(linea !=null){
-                    String[] datos = linea.split(",");
-                    if(!datos[0].equals(id)){
-                        pw.println(linea);
-                    }
-                    linea = br.readLine();
-                }
-                br.close();
-                pw.close();
-                
-                original.delete();
-                temporal.renameTo(original);
-                
-                JOptionPane.showMessageDialog(this, "Usuario Eliminado");
-            }catch(IOException e){
-                JOptionPane.showMessageDialog(this,"Error al eliminar "+e.getMessage());
-            }
+        Usuario usuario = new Usuario(
+            id,
+            TxtNombre.getText().trim(),
+            TxtTelefono.getText().trim(),
+            TxtCorreo.getText().trim(),
+            TxtUsuario.getText(),
+            TxtContra.getText(),
+            rol
+        );
+
+        if (usuario.eliminarUsuario()) {
+            JOptionPane.showMessageDialog(this, "Registro eliminado correctamente.");
+            this.dispose(); 
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al eliminar el registro.");
         }
+    }  
     }//GEN-LAST:event_BtnEliminarActionPerformed
 
     /**

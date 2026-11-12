@@ -4,6 +4,8 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.Usuario;
+import com.mycompany.canchapro.modelo.misenums.RolUsuario;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import javax.swing.JOptionPane;
@@ -159,19 +161,28 @@ public class NuevoUsuario extends javax.swing.JDialog {
     }//GEN-LAST:event_TxtNombreActionPerformed
 
     private void BtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCrearActionPerformed
-        try {
-        String linea = id + "," +TxtNombre.getText()+","+TxtTelefono.getText()+ ","+TxtCorreo.getText()+ ","+TxtUsuario.getText()+","+TxtContra.getText()+ ","+"ADMINISTRADOR"; 
+        try{
+            int idUsuario = Integer.parseInt(id);
+            RolUsuario rol = RolUsuario.valueOf("ADMINISTRADOR");
 
-        FileWriter fw = new FileWriter("datos/usuarios.txt", true);
-        PrintWriter pw = new PrintWriter(fw);
-        pw.println(linea);
-        pw.close();
+            Usuario usuario = new Usuario(
+            idUsuario,
+            TxtNombre.getText().trim(),
+            TxtTelefono.getText().trim(),
+            TxtCorreo.getText().trim(),
+            TxtUsuario.getText().trim(),
+            TxtContra.getText().trim(),
+            rol
+        );
 
-        JOptionPane.showMessageDialog(this, "Usuario creado ");
-        this.dispose(); 
-
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
+        if(usuario.crerUsuario()) {
+            JOptionPane.showMessageDialog(this, "Usuario creado");
+            this.dispose();
+        }else {
+            JOptionPane.showMessageDialog(this, "Error al guardar el usuario");
+        }
+    }catch(Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
     }//GEN-LAST:event_BtnCrearActionPerformed
 

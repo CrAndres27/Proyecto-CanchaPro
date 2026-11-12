@@ -1,6 +1,10 @@
 
 package com.mycompany.canchapro.modelo;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 
 public class DetalleVenta {
     private int cod_detalle;
@@ -63,4 +67,17 @@ public class DetalleVenta {
         return this.subtotal;
     }
     
+    public void guardardetalleVenta(int numVenta) {
+    try{
+        FileWriter fr = new FileWriter("datos/detalleventa.txt", true);
+        PrintWriter pw = new PrintWriter("fr");
+        
+        String nuevoprecio = String.format("%.2f", this.precio).replace(",", ".");
+        String nuevosubtotal = String.format("%.2f", this.subtotal).replace(",", ".");
+
+        pw.println(this.cod_detalle + "," + numVenta + "," + this.producto.getCod_producto() + "," + this.cantidad + "," + nuevoprecio + "," + nuevosubtotal);
+    }catch (IOException e) {
+        System.out.println("Error al guardar el detalle: " + e.getMessage());
+        }
+    }
 }

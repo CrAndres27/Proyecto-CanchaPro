@@ -4,6 +4,8 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.Cancha;
+import com.mycompany.canchapro.modelo.misenums.EstadoCancha;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -39,6 +41,7 @@ public class Reservas extends javax.swing.JPanel {
         BtReserva = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        BtnEstado = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(978, 578));
 
@@ -60,6 +63,11 @@ public class Reservas extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        TablaReservas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaReservasMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(TablaReservas);
@@ -84,6 +92,10 @@ public class Reservas extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
         jLabel2.setText("CANCHA PRO");
 
+        BtnEstado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnEstado.setText("Cambiar Estado\n");
+        BtnEstado.addActionListener(this::BtnEstadoActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -98,8 +110,11 @@ public class Reservas extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BtReserva)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 845, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 845, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(BtReserva)
+                                .addGap(18, 18, 18)
+                                .addComponent(BtnEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(73, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -115,7 +130,9 @@ public class Reservas extends javax.swing.JPanel {
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(BtReserva)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtReserva)
+                    .addComponent(BtnEstado))
                 .addContainerGap(140, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -143,46 +160,53 @@ public class Reservas extends javax.swing.JPanel {
         precio,
         cancha
     );
-    fr.setLocationRelativeTo(this);
-    fr.setVisible(true);
+        fr.setLocationRelativeTo(this);
+        fr.setVisible(true);
+        TablaReservas.setModel(Cancha.ModeloCancha());
     }//GEN-LAST:event_BtReservaActionPerformed
 
-    public void CargarCanchas(){
-    DefaultTableModel cancha = new DefaultTableModel();
-    
-    cancha.addColumn("Código");
-    cancha.addColumn("Nombre");
-    cancha.addColumn("Tipo");
-    cancha.addColumn("Capacidad");
-    cancha.addColumn("Precio/Hr");
-    cancha.addColumn("Estado");
-    cancha.addColumn("Apertura");
-    cancha.addColumn("Cierre");
-    
-    try{
-        FileReader fr = new FileReader("datos/canchas.txt");
-        BufferedReader br = new BufferedReader(fr);
-
-    
-        String linea;
-        
-        linea = br.readLine();
-        while(linea != null){
-            String[] datos = linea.split(",");
-            if(datos.length>=8){
-                cancha.addRow(datos);
-                linea = br.readLine();
-            }
-        }
-        br.close();
-    }catch (IOException e){
-    JOptionPane.showMessageDialog(this, "Error ala cargar el archivo canchas");
+    private void BtnEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEstadoActionPerformed
+        int fila = TablaReservas.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una cancha de la tabla.");
+        return;
     }
-        TablaReservas.setModel(cancha);
+        String codcancha = TablaReservas.getValueAt(fila, 0).toString();
+
+        EstadoCancha[] opciones = EstadoCancha.values();
+        EstadoCancha nuevoEstado = (EstadoCancha) JOptionPane.showInputDialog(
+        this,
+        "Seleccione el nuevo estado",
+        "Cambiar Estado",
+        JOptionPane.QUESTION_MESSAGE,
+        null,
+        opciones,
+        opciones[0]
+    );
+
+    if (nuevoEstado != null) {
+        Cancha cancha = new Cancha(codcancha);
+
+        if (cancha.cambiarEstado(nuevoEstado)) {
+            JOptionPane.showMessageDialog(this, "Estado actualizado");
+            TablaReservas.setModel(Cancha.ModeloCancha());
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al actualizar el estado");
+        }
+    }
+    }//GEN-LAST:event_BtnEstadoActionPerformed
+
+    private void TablaReservasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaReservasMouseClicked
+
+    }//GEN-LAST:event_TablaReservasMouseClicked
+
+    public void CargarCanchas(){
+        TablaReservas.setModel(Cancha.ModeloCancha());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtReserva;
+    private javax.swing.JButton BtnEstado;
     private javax.swing.JTable TablaReservas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

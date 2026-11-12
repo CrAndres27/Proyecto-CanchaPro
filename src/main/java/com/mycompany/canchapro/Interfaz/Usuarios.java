@@ -4,6 +4,8 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.Cliente;
+import com.mycompany.canchapro.modelo.Usuario;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,8 +25,8 @@ public class Usuarios extends javax.swing.JPanel {
     public Usuarios() {
         initComponents();
         
-        cargarUsuarios("");
-        cargarClientes("");
+        TblUsuarios.setModel(Usuario.ModeloUsuario(""));
+        TblClientes.setModel(Cliente.ModeloClientes(""));
     }
 
     /**
@@ -212,12 +214,14 @@ public class Usuarios extends javax.swing.JPanel {
 
     private void BtnBuscarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarUsuarioActionPerformed
         String coincidencia = TxtBuscarUsuario.getText();
-        cargarUsuarios(coincidencia);
+        DefaultTableModel modelo = Usuario.ModeloUsuario(coincidencia);
+        TblUsuarios.setModel(modelo);
     }//GEN-LAST:event_BtnBuscarUsuarioActionPerformed
 
     private void BtnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarClienteActionPerformed
         String coincidencia = TxtBuscarCliente.getText();
-        cargarClientes(coincidencia);
+        DefaultTableModel modelo = Cliente.ModeloClientes(coincidencia);
+        TblClientes.setModel(modelo);
     }//GEN-LAST:event_BtnBuscarClienteActionPerformed
 
     private void TblUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TblUsuariosMouseClicked
@@ -236,7 +240,7 @@ public class Usuarios extends javax.swing.JPanel {
             pu.setLocationRelativeTo(null);
             pu.setVisible(true);
             
-            cargarUsuarios("");
+            TblUsuarios.setModel(Usuario.ModeloUsuario(""));
             }
         }
     }//GEN-LAST:event_TblUsuariosMouseClicked
@@ -255,19 +259,19 @@ public class Usuarios extends javax.swing.JPanel {
             pc.setLocationRelativeTo(null);
             pc.setVisible(true);
             
-            cargarClientes("");
+            TblClientes.setModel(Cliente.ModeloClientes(""));
             }
         }
     }//GEN-LAST:event_TblClientesMouseClicked
 
     private void BtnNuevoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNuevoUsuarioActionPerformed
         try{
-        String Idnuevo = ObtenerCodigo("datos/usuarios.txt");
+        String Idnuevo = String.valueOf(Usuario.generarId("datos/usuarios.txt"));
         
         NuevoUsuario nu = new NuevoUsuario(null, true, Idnuevo, "","","","","");
         nu.setLocationRelativeTo(null);
         nu.setVisible(true);
-        cargarUsuarios("");
+        TblUsuarios.setModel(Usuario.ModeloUsuario(""));
         } catch(Exception e){
             JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
         }
@@ -275,101 +279,17 @@ public class Usuarios extends javax.swing.JPanel {
 
     private void BtnNuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnNuevoClienteActionPerformed
         try{
-        String Idnuevo = ObtenerCodigo("datos/clientes.txt");
+        String Idnuevo = String.valueOf(Usuario.generarId("datos/clientes.txt"));
         String fecha = java.time.LocalDate.now().toString();
         
         NuevoCliente nc = new NuevoCliente(null, true, Idnuevo,"","","",fecha);
         nc.setLocationRelativeTo(null);
         nc.setVisible(true);
+        TblClientes.setModel(Cliente.ModeloClientes(""));
         }catch(Exception e){
             JOptionPane.showMessageDialog(this, "Error "+e.getMessage());
         }
     }//GEN-LAST:event_BtnNuevoClienteActionPerformed
-    
-    public void cargarUsuarios(String coincidencia){
-    DefaultTableModel usuarios = (DefaultTableModel) TblUsuarios.getModel();
-
-    try{
-        FileReader fr = new FileReader ("datos/usuarios.txt");
-        BufferedReader br = new BufferedReader(fr);
-        usuarios.setRowCount(0);
-        
-        String linea;
-        linea = br.readLine();
-        
-        while(linea !=null){
-        String[] datos = linea.split(",");
-        if(datos.length >=7){
-            String nombre = datos[1];
-            String telefono = datos[2];
-            if(coincidencia.isEmpty() || nombre.contains(coincidencia) || telefono.contains(coincidencia)){
-                usuarios.addRow(datos);
-                }
-            }
-            linea = br.readLine();
-        }
-        br.close();
-    }catch(IOException e){
-        JOptionPane.showMessageDialog(this, "Error al cargar usuarios" + e.getMessage());
-     }
-    }
-    
-    public void cargarClientes(String coincidencia){
-    DefaultTableModel clientes = (DefaultTableModel) TblClientes.getModel();
-    
-    try{
-        FileReader fr = new FileReader("datos/clientes.txt");
-        BufferedReader br = new BufferedReader(fr);
-        clientes.setRowCount(0);
-        
-        String linea;
-        linea = br.readLine();   
-        
-        while(linea !=null){
-            String[] datos = linea.split(",");
-            if(datos.length >=5){
-                String nombre = datos[1];
-                String telefono = datos[2];
-                if(coincidencia.isEmpty() || nombre.contains(coincidencia) || telefono.contains(coincidencia)){
-                    clientes.addRow(datos);
-                }
-            }
-            linea = br.readLine();
-        }
-        br.close();    
-    }catch (IOException e ){
-        JOptionPane.showMessageDialog(this, "Error al cargar clientes" + e.getMessage());
-        }
-    }
-    
-    public String ObtenerCodigo(String rutaArchivo){
-        int idMayor = 0;
-        int idActual;
-        
-        try{
-            FileReader fr = new FileReader(rutaArchivo);
-            BufferedReader br = new BufferedReader(fr);
-            
-            String linea;
-            linea = br.readLine();
-            
-            while(linea != null){
-                String[] datos = linea.split(",");
-                idActual = Integer.parseInt(datos[0]);
-                
-                if(idActual > idMayor){
-                    idMayor = idActual;
-                }
-                linea = br.readLine();
-            }
-            br.close();
-        }catch(IOException e){
-            idMayor = 0;
-        }
-            int Idnuevo = idMayor + 1;
-            return String.valueOf(Idnuevo);
-    }
-  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnBuscarCliente;

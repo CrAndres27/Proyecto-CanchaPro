@@ -1,6 +1,8 @@
 
 package com.mycompany.canchapro.modelo;
 
+import java.time.LocalTime;
+
 public class DetalleServicio {
     private int cod_servicio;
     private int cantidad;
@@ -36,5 +38,25 @@ public class DetalleServicio {
         this.subtotal = subtotal;
     }
     
-    
+    public double calcularSubtotal(double precioUnitario) {
+        this.subtotal = this.cantidad * precioUnitario;
+        return this.subtotal;
+    }
+
+    public static double calcularServicios(LocalTime horainicio, LocalTime horafin, int balones, int chalecos, boolean arbitro) {
+        int duracion = duracion = horafin.getHour() - horainicio.getHour();
+        if(duracion <= 0) {
+            duracion = 1;
+        }
+
+        double subBalones = balones * ServicioAdicional.PrecioServicio("BALON");
+        double subChalecos = chalecos * ServicioAdicional.PrecioServicio("CHALECOS");
+        double subArbitro = 0.0;
+
+        if(arbitro) {
+        subArbitro = duracion * ServicioAdicional.PrecioServicio("ARBITRO");
+        }
+
+        return subBalones + subChalecos + subArbitro;
+    }
 }
