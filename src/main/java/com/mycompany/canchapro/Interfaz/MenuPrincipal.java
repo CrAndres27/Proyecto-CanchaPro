@@ -4,6 +4,7 @@
  */
 package com.mycompany.canchapro.Interfaz;
 
+import com.mycompany.canchapro.modelo.ConfiguracionTienda;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
@@ -21,18 +22,54 @@ public class MenuPrincipal extends javax.swing.JFrame {
     public MenuPrincipal() {
         initComponents();
         this.setLocationRelativeTo(null);
-        //Aqui esta lo del menu de tienda
-        MnuTienda.setVisible(false);
         
+        boolean estado = ConfiguracionTienda.leerEstadoTienda();
+        MnuTienda.setVisible(estado);
+
+
         java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(evt -> {
-        if (evt.getID() == java.awt.event.KeyEvent.KEY_PRESSED && evt.isControlDown() && evt.getKeyCode() == java.awt.event.KeyEvent.VK_T) {
-            MnuTienda.setVisible(!MnuTienda.isVisible());
+            if (this.isVisible() == false) {
+                return false;
+            }
+
+        if (evt.getID() == java.awt.event.KeyEvent.KEY_PRESSED && evt.isControlDown() && evt.getKeyCode() == java.awt.event.KeyEvent.VK_T) { 
+            boolean estadoActual = MnuTienda.isVisible();
+            boolean nuevoEstado;
+            int respuesta;
+
+            if(estadoActual == true){
+                nuevoEstado = false;
+                respuesta = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Desea desactivar el módulo de Tienda?",
+                    "Configuración de Tienda",
+                    javax.swing.JOptionPane.YES_NO_OPTION
+                );
+            }else{
+                nuevoEstado = true;
+                respuesta = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                   "¿Desea activar el módulo de Tienda?",
+                   "Configuración de Tienda",
+                   javax.swing.JOptionPane.YES_NO_OPTION
+                );
+            }
+
+            if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
+                MnuTienda.setVisible(nuevoEstado);
+                ConfiguracionTienda.guardarEstadoTienda(nuevoEstado);
+                if (nuevoEstado == true){
+                    javax.swing.JOptionPane.showMessageDialog(this, "Tienda activada");
+                }else{
+                    javax.swing.JOptionPane.showMessageDialog(this, "Tienda desactivada");
+                }
+            }
         }
         return false;
     });
-        
-        Canchas pl = new Canchas();
-        MostrarPanel(pl);
+
+    Canchas pl = new Canchas();
+    MostrarPanel(pl);
     }
 
     /**
@@ -61,8 +98,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
         Contenido.setLayout(new java.awt.BorderLayout());
 
+        Mnu.setBackground(new java.awt.Color(153, 153, 255));
+        Mnu.setForeground(new java.awt.Color(255, 255, 255));
         Mnu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
+        MnuCancha.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         MnuCancha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/iconoCancha.png"))); // NOI18N
         MnuCancha.setText("CANCHAS");
         MnuCancha.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -73,6 +113,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         MnuCancha.addActionListener(this::MnuCanchaActionPerformed);
         Mnu.add(MnuCancha);
 
+        MnuReserva.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         MnuReserva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/reservaicono.png"))); // NOI18N
         MnuReserva.setText("RESERVA");
         MnuReserva.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -83,6 +124,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         MnuReserva.addActionListener(this::MnuReservaActionPerformed);
         Mnu.add(MnuReserva);
 
+        MnuTienda.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         MnuTienda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoTienda.png"))); // NOI18N
         MnuTienda.setText("TIENDA");
         MnuTienda.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -92,6 +134,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
         Mnu.add(MnuTienda);
 
+        MnuReporte.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         MnuReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/IconoReporte.png"))); // NOI18N
         MnuReporte.setText("REPORTES");
         MnuReporte.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -101,6 +144,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
         Mnu.add(MnuReporte);
 
+        jMenu1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/usuario.png"))); // NOI18N
         jMenu1.setText("USUARIOS");
         jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -120,7 +164,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Contenido, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+            .addComponent(Contenido, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
         );
 
         pack();

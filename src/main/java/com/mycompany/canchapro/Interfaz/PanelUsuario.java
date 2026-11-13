@@ -105,11 +105,15 @@ public class PanelUsuario extends javax.swing.JDialog {
         TxtContra.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         TxtContra.addActionListener(this::TxtContraActionPerformed);
 
+        BtnEditar.setBackground(new java.awt.Color(255, 255, 153));
         BtnEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnEditar.setForeground(new java.awt.Color(0, 0, 0));
         BtnEditar.setText("Editar");
         BtnEditar.addActionListener(this::BtnEditarActionPerformed);
 
+        BtnEliminar.setBackground(new java.awt.Color(255, 51, 51));
         BtnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnEliminar.setForeground(new java.awt.Color(0, 0, 0));
         BtnEliminar.setText("Eliminar");
         BtnEliminar.addActionListener(this::BtnEliminarActionPerformed);
 

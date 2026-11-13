@@ -24,8 +24,6 @@ public class Reserva {
     private double total;
     private double saldo_pendiente;
     private EstadoReserva estado_reserva;
-    private Pago[] pagos = new Pago[100];
-    private int cont_pago = 0;
     private DetalleServicio [] servicio = new DetalleServicio[100];
     private int cont_servicio = 0;
     private LocalDateTime fecha_cancelacion;
@@ -121,22 +119,6 @@ public class Reserva {
 
     public void setEstado_reserva(EstadoReserva estado_reserva) {
         this.estado_reserva = estado_reserva;
-    }
-
-    public Pago[] getPagos() {
-        return pagos;
-    }
-
-    public void setPagos(Pago[] pagos) {
-        this.pagos = pagos;
-    }
-
-    public int getCont_pago() {
-        return cont_pago;
-    }
-
-    public void setCont_pago(int cont_pago) {
-        this.cont_pago = cont_pago;
     }
 
     public DetalleServicio[] getServicio() {

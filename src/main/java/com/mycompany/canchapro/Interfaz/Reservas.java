@@ -82,7 +82,9 @@ public class Reservas extends javax.swing.JPanel {
             TablaReservas.getColumnModel().getColumn(7).setResizable(false);
         }
 
+        BtReserva.setBackground(new java.awt.Color(153, 255, 153));
         BtReserva.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtReserva.setForeground(new java.awt.Color(0, 0, 0));
         BtReserva.setText("Realizar Reserva");
         BtReserva.addActionListener(this::BtReservaActionPerformed);
 
@@ -92,7 +94,9 @@ public class Reservas extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
         jLabel2.setText("CANCHA PRO");
 
+        BtnEstado.setBackground(new java.awt.Color(255, 255, 153));
         BtnEstado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnEstado.setForeground(new java.awt.Color(0, 0, 0));
         BtnEstado.setText("Cambiar Estado\n");
         BtnEstado.addActionListener(this::BtnEstadoActionPerformed);
 

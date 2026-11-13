@@ -79,13 +79,17 @@ public class Usuarios extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(TblUsuarios);
 
+        BtnNuevoUsuario.setBackground(new java.awt.Color(153, 255, 153));
         BtnNuevoUsuario.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnNuevoUsuario.setForeground(new java.awt.Color(0, 0, 0));
         BtnNuevoUsuario.setText("NUEVO");
         BtnNuevoUsuario.addActionListener(this::BtnNuevoUsuarioActionPerformed);
 
         TxtBuscarUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        BtnBuscarUsuario.setBackground(new java.awt.Color(255, 255, 153));
         BtnBuscarUsuario.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnBuscarUsuario.setForeground(new java.awt.Color(0, 0, 0));
         BtnBuscarUsuario.setText("BUSCAR");
         BtnBuscarUsuario.addActionListener(this::BtnBuscarUsuarioActionPerformed);
 
@@ -151,13 +155,17 @@ public class Usuarios extends javax.swing.JPanel {
             TblClientes.getColumnModel().getColumn(4).setResizable(false);
         }
 
+        BtnNuevoCliente.setBackground(new java.awt.Color(153, 255, 153));
         BtnNuevoCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnNuevoCliente.setForeground(new java.awt.Color(0, 0, 0));
         BtnNuevoCliente.setText("NUEVO");
         BtnNuevoCliente.addActionListener(this::BtnNuevoClienteActionPerformed);
 
         TxtBuscarCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        BtnBuscarCliente.setBackground(new java.awt.Color(255, 255, 153));
         BtnBuscarCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnBuscarCliente.setForeground(new java.awt.Color(0, 0, 0));
         BtnBuscarCliente.setText("BUSCAR");
         BtnBuscarCliente.addActionListener(this::BtnBuscarClienteActionPerformed);
 

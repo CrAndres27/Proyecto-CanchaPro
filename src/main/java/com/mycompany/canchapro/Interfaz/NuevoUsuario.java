@@ -87,7 +87,9 @@ public class NuevoUsuario extends javax.swing.JDialog {
 
         TxtContra.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        BtnCrear.setBackground(new java.awt.Color(153, 255, 153));
         BtnCrear.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnCrear.setForeground(new java.awt.Color(0, 0, 0));
         BtnCrear.setText("Crear\n");
         BtnCrear.addActionListener(this::BtnCrearActionPerformed);
 

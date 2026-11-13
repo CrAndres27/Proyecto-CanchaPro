@@ -80,7 +80,9 @@ public class Tienda extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Cantidad");
 
+        BtnAgregar.setBackground(new java.awt.Color(153, 255, 153));
         BtnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnAgregar.setForeground(new java.awt.Color(0, 0, 0));
         BtnAgregar.setText("Agregar Producto");
         BtnAgregar.addActionListener(this::BtnAgregarActionPerformed);
 
@@ -90,7 +92,9 @@ public class Tienda extends javax.swing.JPanel {
 
         TxtProducto.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        BtnBuscarProducto.setBackground(new java.awt.Color(255, 255, 153));
         BtnBuscarProducto.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnBuscarProducto.setForeground(new java.awt.Color(0, 0, 0));
         BtnBuscarProducto.setText("Buscar");
         BtnBuscarProducto.addActionListener(this::BtnBuscarProductoActionPerformed);
 
@@ -102,7 +106,9 @@ public class Tienda extends javax.swing.JPanel {
 
         TxtCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
+        BtnBuscarCliente.setBackground(new java.awt.Color(255, 255, 153));
         BtnBuscarCliente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnBuscarCliente.setForeground(new java.awt.Color(0, 0, 0));
         BtnBuscarCliente.setText("Buscar");
         BtnBuscarCliente.addActionListener(this::BtnBuscarClienteActionPerformed);
 
@@ -114,7 +120,9 @@ public class Tienda extends javax.swing.JPanel {
 
         CmbMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "EFECTIVO", "TARJETA", "TRANSFERENCIA" }));
 
+        BtnPagar.setBackground(new java.awt.Color(153, 255, 153));
         BtnPagar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnPagar.setForeground(new java.awt.Color(0, 0, 0));
         BtnPagar.setText("Pagar");
         BtnPagar.addActionListener(this::BtnPagarActionPerformed);
 
@@ -207,7 +215,9 @@ public class Tienda extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(TblProductos);
 
+        BtnAgregarStock.setBackground(new java.awt.Color(255, 255, 153));
         BtnAgregarStock.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnAgregarStock.setForeground(new java.awt.Color(0, 0, 0));
         BtnAgregarStock.setText("Ver Productos");
         BtnAgregarStock.addActionListener(this::BtnAgregarStockActionPerformed);
 

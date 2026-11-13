@@ -102,6 +102,7 @@ public class RealizarReserva extends javax.swing.JDialog {
         CmbClientes.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         CmbClientes.addActionListener(this::CmbClientesActionPerformed);
 
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -197,7 +198,9 @@ public class RealizarReserva extends javax.swing.JDialog {
         CmbHorario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "08:00", "09:00", "10:00 ", "11:00 ", "12:00", "13:00", "14:00 ", "15:00 ", "16:00 ", "17:00 ", "18:00 ", "19:00 ", "20:00 ", "21:00 ", "22:00 " }));
         CmbHorario.addActionListener(this::CmbHorarioActionPerformed);
 
+        BtPago.setBackground(new java.awt.Color(153, 255, 153));
         BtPago.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        BtPago.setForeground(new java.awt.Color(0, 0, 0));
         BtPago.setText("PAGAR");
         BtPago.addActionListener(this::BtPagoActionPerformed);
 
@@ -208,7 +211,9 @@ public class RealizarReserva extends javax.swing.JDialog {
         CmbSalida.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "09:00 ", "10:00 ", "11:00 ", "12:00", "13:00", "14:00 ", "15:00 ", "16:00 ", "17:00 ", "18:00 ", "19:00 ", "20:00 ", "21:00 ", "22:00 ", "23:00" }));
         CmbSalida.addActionListener(this::CmbSalidaActionPerformed);
 
+        BtnGuardarReserva.setBackground(new java.awt.Color(255, 255, 153));
         BtnGuardarReserva.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        BtnGuardarReserva.setForeground(new java.awt.Color(0, 0, 0));
         BtnGuardarReserva.setText("GUARDAR");
         BtnGuardarReserva.addActionListener(this::BtnGuardarReservaActionPerformed);
 
@@ -225,7 +230,9 @@ public class RealizarReserva extends javax.swing.JDialog {
 
         TxtCancha.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        BtnCancelar.setBackground(new java.awt.Color(255, 51, 51));
         BtnCancelar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        BtnCancelar.setForeground(new java.awt.Color(0, 0, 0));
         BtnCancelar.setText("CANCELAR");
         BtnCancelar.addActionListener(this::BtnCancelarActionPerformed);
 

@@ -56,7 +56,9 @@ public class Reportes extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Fecha Final");
 
+        BtnGenerar.setBackground(new java.awt.Color(153, 255, 153));
         BtnGenerar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnGenerar.setForeground(new java.awt.Color(0, 0, 0));
         BtnGenerar.setText("Generar");
         BtnGenerar.addActionListener(this::BtnGenerarActionPerformed);
 

@@ -63,7 +63,9 @@ public class AgregarStock extends javax.swing.JDialog {
 
         TxtBuscar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
+        BtnBuscar.setBackground(new java.awt.Color(255, 255, 153));
         BtnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnBuscar.setForeground(new java.awt.Color(0, 0, 0));
         BtnBuscar.setText("Buscar");
         BtnBuscar.addActionListener(this::BtnBuscarActionPerformed);
 
@@ -94,7 +96,9 @@ public class AgregarStock extends javax.swing.JDialog {
         TxtEstado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         TxtEstado.addActionListener(this::TxtEstadoActionPerformed);
 
+        BtnGuardar.setBackground(new java.awt.Color(153, 255, 153));
         BtnGuardar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnGuardar.setForeground(new java.awt.Color(0, 0, 0));
         BtnGuardar.setText("Guardar");
         BtnGuardar.addActionListener(this::BtnGuardarActionPerformed);
 
